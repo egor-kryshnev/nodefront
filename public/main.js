@@ -266,53 +266,51 @@ var AppModule = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthService", function() { return AuthService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../groups/peopleGroup.model */ "./src/app/groups/peopleGroup.model.ts");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../core/header/peopleDb.model */ "./src/app/core/header/peopleDb.model.ts");
+/* harmony import */ var src_app_getip_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/getip.service */ "./src/app/getip.service.ts");
+/* harmony import */ var _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../groups/peopleGroup.model */ "./src/app/groups/peopleGroup.model.ts");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
+
 
 
 
 
 
 var AuthService = /** @class */ (function () {
-    function AuthService(route, http, router) {
+    function AuthService(route, http, router, getipService) {
         this.route = route;
         this.http = http;
         this.router = router;
+        this.getipService = getipService;
+        this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"]('', '', '', '', '');
     }
-    AuthService.prototype.login = function (login, password) {
-        // this.http.post('http://192.168.99.100:5000/authenticate', {login: login, password: password}).subscribe((resp: any) => {
-        //     localStorage.setItem('auth_token', resp.token);
-        //     localStorage.setItem('auth_login', resp.signed_user);
-        //     this.router.navigate(['chat'], {relativeTo: this.route});
-        // });
-    };
-    AuthService.prototype.registr = function (login, password) {
-        // this.http.post('http://192.168.99.100:5000/setupAcc', {login: login, password: password}).subscribe((resp: any) => {
-        //     localStorage.setItem('auth_token', resp.token);
-        //     localStorage.setItem('auth_login', resp.signed_user);
-        //     this.router.navigate(['chat'], {relativeTo: this.route});
-        // });
+    AuthService.prototype.login = function (user) {
+        var _this = this;
+        // let img = Math.floor(Math.random() * (10 - 1 + 1) ) + 1;
+        this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](user.id, user.displayName, '14', "assets/img/guest.png", user.mail);
+        this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe(function (res) {
+            if (res !== { message: "User created!" }) {
+                _this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](res._id, res.name, res.number, res.avatarPath, res.email);
+            }
+        });
+        //"assets/img/default" + img + ".png"
     };
     AuthService.prototype.logout = function () {
         // localStorage.removeItem('auth_token');
         // localStorage.removeItem('auth_login');
     };
-    // public logIn(): boolean {
-    // return (localStorage.getItem('auth_token') !== null);
-    // }
-    // public getName(): string {
-    // if(localStorage.getItem('auth_login')){
-    // return localStorage.getItem('auth_login').toString();
-    // }
-    // }
+    AuthService.prototype.getUser = function () {
+        return this.user;
+    };
     AuthService.prototype.getAcc = function () {
-        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_1__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
         return acc;
     };
     AuthService.prototype.checkAdmin = function (people) {
-        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_1__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
         var result = people.find(function (person) {
             return person.user.name === acc.user.name && person.admin === acc.admin;
         });
@@ -324,8 +322,8 @@ var AuthService = /** @class */ (function () {
         }
     };
     AuthService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]])
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_6__["ActivatedRoute"], _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClient"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], src_app_getip_service__WEBPACK_IMPORTED_MODULE_2__["GetipService"]])
     ], AuthService);
     return AuthService;
 }());
@@ -367,22 +365,36 @@ module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark\">\n  <div cl
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeaderComponent", function() { return HeaderComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../groups/group-detail/group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _getip_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../getip.service */ "./src/app/getip.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../groups/group-detail/group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+
 
 
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(route, router, groupDetailService, elementRef) {
+    function HeaderComponent(route, router, groupDetailService, elementRef, http, getipService, authService) {
         this.route = route;
         this.router = router;
         this.groupDetailService = groupDetailService;
         this.elementRef = elementRef;
+        this.http = http;
+        this.getipService = getipService;
+        this.authService = authService;
         this.backgrounds = ['background1.jpg', 'background2.jpg', 'background3.jpg', 'background4.jpg', 'background5.jpg'];
     }
     HeaderComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.http.get('http://' + this.getipService.getip() + ':4200/user').subscribe(function (res) {
+            _this.authService.login(res);
+            console.log(_this.authService.getUser());
+        });
     };
     HeaderComponent.prototype.onHome = function () {
         // this.elementRef.nativeElement.ownerDocument.body.style.background = 'url(assets/img/backgrounds/background2.jpg) no-repeat center center fixed';
@@ -393,14 +405,47 @@ var HeaderComponent = /** @class */ (function () {
         this.elementRef.nativeElement.ownerDocument.body.style.background = 'url(assets/img/backgrounds/' + background + ') no-repeat center center fixed';
     };
     HeaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_6__["Component"])({
             selector: 'app-header',
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/core/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/core/header/header.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_1__["GroupDetailService"], _angular_core__WEBPACK_IMPORTED_MODULE_3__["ElementRef"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"], _angular_core__WEBPACK_IMPORTED_MODULE_6__["ElementRef"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _getip_service__WEBPACK_IMPORTED_MODULE_2__["GetipService"], _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"]])
     ], HeaderComponent);
     return HeaderComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/core/header/peopleDb.model.ts":
+/*!***********************************************!*\
+  !*** ./src/app/core/header/peopleDb.model.ts ***!
+  \***********************************************/
+/*! exports provided: PeopleDb */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PeopleDb", function() { return PeopleDb; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var PeopleDb = /** @class */ (function () {
+    function PeopleDb(_id, name, number, avatarPath, email) {
+        this._id = _id;
+        this.name = name;
+        this.number = number;
+        this.avatarPath = avatarPath;
+        this.email = email;
+    }
+    PeopleDb = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [String, String, String, String, String])
+    ], PeopleDb);
+    return PeopleDb;
 }());
 
 
@@ -2130,9 +2175,6 @@ var GroupsComponent = /** @class */ (function () {
     }
     GroupsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://' + this.getipService.getip() + ':4200/user').subscribe(function (res) {
-            console.log(res);
-        });
         this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonNotAdmin/' + this.authService.getAcc().user._id).subscribe(function (res) {
             _this.groups = res;
             console.log(_this.groups);
