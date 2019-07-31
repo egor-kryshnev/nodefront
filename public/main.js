@@ -289,30 +289,55 @@ var AuthService = /** @class */ (function () {
     }
     AuthService.prototype.login = function (user) {
         var _this = this;
-        // let img = Math.floor(Math.random() * (10 - 1 + 1) ) + 1;
+        /** Shraga */
         this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](user.id, user.displayName, '14', "assets/img/guest.png", user.mail);
         this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe(function (res) {
             if (res !== { message: "User created!" }) {
                 _this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](res._id, res.name, res.number, res.avatarPath, res.email);
             }
         });
-        //"assets/img/default" + img + ".png"
+        // this.user = new PeopleDb('5d2594e36fcb691a0d178a71', 'first', '1','assets/img/guest.png' , 'first@test.com');
     };
     AuthService.prototype.logout = function () {
-        // localStorage.removeItem('auth_token');
-        // localStorage.removeItem('auth_login');
+    };
+    // public getId() {
+    //     return this.user._id;
+    // }
+    // public getNumber() {
+    //     return this.user.number;
+    // }
+    AuthService.prototype.getName = function () {
+        return this.user.name;
+    };
+    AuthService.prototype.getEmail = function () {
+        return this.user.email;
+    };
+    AuthService.prototype.getAvatarPath = function () {
+        return this.user.avatarPath;
+    };
+    AuthService.prototype.setAvatarPath = function (avatar) {
+        this.user.avatarPath = avatar;
     };
     AuthService.prototype.getUser = function () {
         return this.user;
     };
     AuthService.prototype.getAcc = function () {
-        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        // let acc = new PeopleGroup('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        // return acc;
+        return this.user;
+    };
+    AuthService.prototype.getAccForGroup = function () {
+        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__["PeopleGroup"](this.user._id, this.user.name, this.user.number, this.user.email, true, this.user.avatarPath);
         return acc;
     };
     AuthService.prototype.checkAdmin = function (people) {
-        var acc = new _groups_peopleGroup_model__WEBPACK_IMPORTED_MODULE_3__["PeopleGroup"]('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        // let acc = new PeopleGroup('5d2594e36fcb691a0d178a71', 'first', '1', 'first@test.com', true, "assets/img/guest.png");
+        var _this = this;
+        // var result = people.find( person => {
+        //     return person.user.name === acc.user.name && person.admin === acc.admin;
+        // });
         var result = people.find(function (person) {
-            return person.user.name === acc.user.name && person.admin === acc.admin;
+            return person.user.name === _this.user.name && person.admin;
         });
         if (result) {
             return true;
@@ -339,7 +364,7 @@ var AuthService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/* body {\r\n    background: url(../../../assets/img/background.jpg) no-repeat center center fixed;\r\n} */\r\n\r\n.backgrounds {\r\n    width: 150px;\r\n    height: 75px;\r\n}\r\n\r\n/* .backgrounds:hover {\r\n    color: slategray;\r\n} */\r\n\r\n.navbar {\r\n    background-color: black;\r\n    color: black;\r\n}\r\n\r\n.navbar-header a {\r\n    color: black;\r\n}\r\n\r\n.nav-item a {\r\n    color: white;\r\n}\r\n\r\nh2 {\r\n    color: white;\r\n}\r\n\r\nh2:hover {\r\n  color: slategrey;\r\n}\r\n\r\n#home:hover {\r\n    cursor: pointer;\r\n}\r\n\r\nul {\r\n    list-style: none;\r\n    background-color: black\r\n}\r\n\r\nul li {\r\n\tfloat: left;\r\n\tpadding: 3px;\r\n\r\n}\r\n\r\nul li a {\r\n\tdisplay: block;\r\n\tpadding: 20px;\r\n\tcolor: #fff;\r\n    text-decoration: none;\r\n    font-weight: 700;\r\n}\r\n\r\nul li a:hover {\r\n\tbackground: #444;\r\n\t -webkit-transition-property: background-color;\r\n\t transition-property: background-color;\r\n   -webkit-transition-duration: 0.4s;\r\n           transition-duration: 0.4s;\r\n   -webkit-transition-timing-function: ease;\r\n           transition-timing-function: ease;\r\n   color: #FFF;\r\n\r\n\r\n\r\n}\r\n\r\nul li:hover {\r\n    background: #a3c2c2;\r\n    cursor: pointer;\r\n}\r\n\r\n.dropdown-menu {\r\n    background-color: black;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29yZS9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0dBRUc7O0FBRUg7SUFDSSxZQUFZO0lBQ1osWUFBWTtBQUNoQjs7QUFFQTs7R0FFRzs7QUFFSDtJQUNJLHVCQUF1QjtJQUN2QixZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksWUFBWTtBQUNoQjs7QUFFQTtJQUNJLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCOztBQUVBO0VBQ0UsZ0JBQWdCO0FBQ2xCOztBQUVBO0lBQ0ksZUFBZTtBQUNuQjs7QUFFQTtJQUNJLGdCQUFnQjtJQUNoQjtBQUNKOztBQUVBO0NBQ0MsV0FBVztDQUNYLFlBQVk7O0FBRWI7O0FBR0E7Q0FDQyxjQUFjO0NBQ2QsYUFBYTtDQUNiLFdBQVc7SUFDUixxQkFBcUI7SUFDckIsZ0JBQWdCO0FBQ3BCOztBQUVBO0NBQ0MsZ0JBQWdCO0VBQ2YsNkNBQXFDO0VBQXJDLHFDQUFxQztHQUNwQyxpQ0FBeUI7V0FBekIseUJBQXlCO0dBQ3pCLHdDQUFnQztXQUFoQyxnQ0FBZ0M7R0FDaEMsV0FBVzs7OztBQUlkOztBQUVBO0lBQ0ksbUJBQW1CO0lBQ25CLGVBQWU7QUFDbkI7O0FBRUE7SUFDSSx1QkFBdUI7QUFDM0IiLCJmaWxlIjoic3JjL2FwcC9jb3JlL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIGJvZHkge1xyXG4gICAgYmFja2dyb3VuZDogdXJsKC4uLy4uLy4uL2Fzc2V0cy9pbWcvYmFja2dyb3VuZC5qcGcpIG5vLXJlcGVhdCBjZW50ZXIgY2VudGVyIGZpeGVkO1xyXG59ICovXHJcblxyXG4uYmFja2dyb3VuZHMge1xyXG4gICAgd2lkdGg6IDE1MHB4O1xyXG4gICAgaGVpZ2h0OiA3NXB4O1xyXG59XHJcblxyXG4vKiAuYmFja2dyb3VuZHM6aG92ZXIge1xyXG4gICAgY29sb3I6IHNsYXRlZ3JheTtcclxufSAqL1xyXG5cclxuLm5hdmJhciB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiBibGFjaztcclxuICAgIGNvbG9yOiBibGFjaztcclxufVxyXG5cclxuLm5hdmJhci1oZWFkZXIgYSB7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbn1cclxuXHJcbi5uYXYtaXRlbSBhIHtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxufVxyXG5cclxuaDIge1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG59XHJcblxyXG5oMjpob3ZlciB7XHJcbiAgY29sb3I6IHNsYXRlZ3JleTtcclxufVxyXG5cclxuI2hvbWU6aG92ZXIge1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG51bCB7XHJcbiAgICBsaXN0LXN0eWxlOiBub25lO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2tcclxufVxyXG5cclxudWwgbGkge1xyXG5cdGZsb2F0OiBsZWZ0O1xyXG5cdHBhZGRpbmc6IDNweDtcclxuXHJcbn1cclxuXHJcblxyXG51bCBsaSBhIHtcclxuXHRkaXNwbGF5OiBibG9jaztcclxuXHRwYWRkaW5nOiAyMHB4O1xyXG5cdGNvbG9yOiAjZmZmO1xyXG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gICAgZm9udC13ZWlnaHQ6IDcwMDtcclxufVxyXG5cclxudWwgbGkgYTpob3ZlciB7XHJcblx0YmFja2dyb3VuZDogIzQ0NDtcclxuXHQgdHJhbnNpdGlvbi1wcm9wZXJ0eTogYmFja2dyb3VuZC1jb2xvcjtcclxuICAgdHJhbnNpdGlvbi1kdXJhdGlvbjogMC40cztcclxuICAgdHJhbnNpdGlvbi10aW1pbmctZnVuY3Rpb246IGVhc2U7XHJcbiAgIGNvbG9yOiAjRkZGO1xyXG5cclxuXHJcblxyXG59XHJcblxyXG51bCBsaTpob3ZlciB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjYTNjMmMyO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG4uZHJvcGRvd24tbWVudSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiBibGFjaztcclxufSJdfQ== */"
+module.exports = "/* body {\r\n    background: url(../../../assets/img/background.jpg) no-repeat center center fixed;\r\n} */\r\n\r\n.backgrounds {\r\n    width: 150px;\r\n    height: 75px;\r\n    border-radius: 10%;\r\n}\r\n\r\n#userAvatar {\r\n    border-radius: 50%;\r\n    width: 50px;\r\n    height: 50px;\r\n    padding-top: 3px;\r\n}\r\n\r\n#userName {\r\n    color: white;\r\n    padding-top: 10px;\r\n}\r\n\r\n#btnBackgrounds {\r\n    cursor: pointer;\r\n    color: white;\r\n}\r\n\r\n/* .backgrounds:hover {\r\n    color: slategray;\r\n} */\r\n\r\n.navbar {\r\n    background-color: black;\r\n    color: black;\r\n}\r\n\r\n.navbar-header a {\r\n    color: black;\r\n}\r\n\r\n.nav-item a {\r\n    color: white;\r\n}\r\n\r\nh2 {\r\n    color: white;\r\n}\r\n\r\nh2:hover {\r\n  color: slategrey;\r\n}\r\n\r\n#home:hover {\r\n    cursor: pointer;\r\n}\r\n\r\nul {\r\n    list-style: none;\r\n    background-color: black\r\n}\r\n\r\nul li {\r\n\tfloat: left;\r\n\tpadding: 3px;\r\n\r\n}\r\n\r\nul li a {\r\n\tdisplay: block;\r\n\tpadding: 20px;\r\n\tcolor: #fff;\r\n    text-decoration: none;\r\n    font-weight: 700;\r\n}\r\n\r\nul li a:hover {\r\n\tbackground: #444;\r\n\t -webkit-transition-property: background-color;\r\n\t transition-property: background-color;\r\n   -webkit-transition-duration: 0.4s;\r\n           transition-duration: 0.4s;\r\n   -webkit-transition-timing-function: ease;\r\n           transition-timing-function: ease;\r\n   color: #FFF;\r\n\r\n\r\n\r\n}\r\n\r\nul li:hover {\r\n    background: #a3c2c2;\r\n    cursor: pointer;\r\n    border-radius: 10%;\r\n}\r\n\r\n.dropdown-menu {\r\n    background-color: black;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29yZS9oZWFkZXIvaGVhZGVyLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0dBRUc7O0FBRUg7SUFDSSxZQUFZO0lBQ1osWUFBWTtJQUNaLGtCQUFrQjtBQUN0Qjs7QUFFQTtJQUNJLGtCQUFrQjtJQUNsQixXQUFXO0lBQ1gsWUFBWTtJQUNaLGdCQUFnQjtBQUNwQjs7QUFFQTtJQUNJLFlBQVk7SUFDWixpQkFBaUI7QUFDckI7O0FBRUE7SUFDSSxlQUFlO0lBQ2YsWUFBWTtBQUNoQjs7QUFFQTs7R0FFRzs7QUFFSDtJQUNJLHVCQUF1QjtJQUN2QixZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksWUFBWTtBQUNoQjs7QUFFQTtJQUNJLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCOztBQUVBO0VBQ0UsZ0JBQWdCO0FBQ2xCOztBQUVBO0lBQ0ksZUFBZTtBQUNuQjs7QUFFQTtJQUNJLGdCQUFnQjtJQUNoQjtBQUNKOztBQUVBO0NBQ0MsV0FBVztDQUNYLFlBQVk7O0FBRWI7O0FBR0E7Q0FDQyxjQUFjO0NBQ2QsYUFBYTtDQUNiLFdBQVc7SUFDUixxQkFBcUI7SUFDckIsZ0JBQWdCO0FBQ3BCOztBQUVBO0NBQ0MsZ0JBQWdCO0VBQ2YsNkNBQXFDO0VBQXJDLHFDQUFxQztHQUNwQyxpQ0FBeUI7V0FBekIseUJBQXlCO0dBQ3pCLHdDQUFnQztXQUFoQyxnQ0FBZ0M7R0FDaEMsV0FBVzs7OztBQUlkOztBQUVBO0lBQ0ksbUJBQW1CO0lBQ25CLGVBQWU7SUFDZixrQkFBa0I7QUFDdEI7O0FBRUE7SUFDSSx1QkFBdUI7QUFDM0IiLCJmaWxlIjoic3JjL2FwcC9jb3JlL2hlYWRlci9oZWFkZXIuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIGJvZHkge1xyXG4gICAgYmFja2dyb3VuZDogdXJsKC4uLy4uLy4uL2Fzc2V0cy9pbWcvYmFja2dyb3VuZC5qcGcpIG5vLXJlcGVhdCBjZW50ZXIgY2VudGVyIGZpeGVkO1xyXG59ICovXHJcblxyXG4uYmFja2dyb3VuZHMge1xyXG4gICAgd2lkdGg6IDE1MHB4O1xyXG4gICAgaGVpZ2h0OiA3NXB4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogMTAlO1xyXG59XHJcblxyXG4jdXNlckF2YXRhciB7XHJcbiAgICBib3JkZXItcmFkaXVzOiA1MCU7XHJcbiAgICB3aWR0aDogNTBweDtcclxuICAgIGhlaWdodDogNTBweDtcclxuICAgIHBhZGRpbmctdG9wOiAzcHg7XHJcbn1cclxuXHJcbiN1c2VyTmFtZSB7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbiAgICBwYWRkaW5nLXRvcDogMTBweDtcclxufVxyXG5cclxuI2J0bkJhY2tncm91bmRzIHtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxufVxyXG5cclxuLyogLmJhY2tncm91bmRzOmhvdmVyIHtcclxuICAgIGNvbG9yOiBzbGF0ZWdyYXk7XHJcbn0gKi9cclxuXHJcbi5uYXZiYXIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbn1cclxuXHJcbi5uYXZiYXItaGVhZGVyIGEge1xyXG4gICAgY29sb3I6IGJsYWNrO1xyXG59XHJcblxyXG4ubmF2LWl0ZW0gYSB7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbn1cclxuXHJcbmgyIHtcclxuICAgIGNvbG9yOiB3aGl0ZTtcclxufVxyXG5cclxuaDI6aG92ZXIge1xyXG4gIGNvbG9yOiBzbGF0ZWdyZXk7XHJcbn1cclxuXHJcbiNob21lOmhvdmVyIHtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5cclxudWwge1xyXG4gICAgbGlzdC1zdHlsZTogbm9uZTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IGJsYWNrXHJcbn1cclxuXHJcbnVsIGxpIHtcclxuXHRmbG9hdDogbGVmdDtcclxuXHRwYWRkaW5nOiAzcHg7XHJcblxyXG59XHJcblxyXG5cclxudWwgbGkgYSB7XHJcblx0ZGlzcGxheTogYmxvY2s7XHJcblx0cGFkZGluZzogMjBweDtcclxuXHRjb2xvcjogI2ZmZjtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICAgIGZvbnQtd2VpZ2h0OiA3MDA7XHJcbn1cclxuXHJcbnVsIGxpIGE6aG92ZXIge1xyXG5cdGJhY2tncm91bmQ6ICM0NDQ7XHJcblx0IHRyYW5zaXRpb24tcHJvcGVydHk6IGJhY2tncm91bmQtY29sb3I7XHJcbiAgIHRyYW5zaXRpb24tZHVyYXRpb246IDAuNHM7XHJcbiAgIHRyYW5zaXRpb24tdGltaW5nLWZ1bmN0aW9uOiBlYXNlO1xyXG4gICBjb2xvcjogI0ZGRjtcclxuXHJcblxyXG5cclxufVxyXG5cclxudWwgbGk6aG92ZXIge1xyXG4gICAgYmFja2dyb3VuZDogI2EzYzJjMjtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIGJvcmRlci1yYWRpdXM6IDEwJTtcclxufVxyXG5cclxuLmRyb3Bkb3duLW1lbnUge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -350,7 +375,7 @@ module.exports = "/* body {\r\n    background: url(../../../assets/img/backgroun
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark\">\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n        <a (click)=\"onHome()\" id=\"home\"><h2>Groups</h2></a>\n    </div>\n    <div class=\"collaps navbar-collapse\">\n      \n    </div>\n    <div class=\"navbar-nav nav-right\">\n      <!-- <div class=\"nav-item\">\n      </div>\n      <div class=\"nav-item\">\n      </div>\n      <div class=\"nav-item\">\n      </div> -->\n\n      <!-- <li class=\"dropdown\" appDropdown #r=\"appDropdown\" >\n          <a style=\"cursor: pointer; color: white;\" class=\"dropdown-toggle\" role=\"button\">Manage <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu dropdown-menu-right pull-right\" [ngClass]=\"{'show':r.isOpen}\">\n              <li><a class=\"dropdown-item\" style=\"cursor: pointer;\">Change background</a></li>\n          </ul>\n      </li> -->\n      <li class=\"dropdown\" appDropdown #r=\"appDropdown\" >\n        <a style=\"cursor: pointer; color: white;\" class=\"dropdown-toggle\" role=\"button\">Backgrounds <span class=\"caret\"></span></a>\n        <ul class=\"dropdown-menu dropdown-menu-right pull-right\" [ngClass]=\"{'show':r.isOpen}\">\n            <!-- <li><a class=\"dropdown-item\" style=\"cursor: pointer;\">Change background</a></li> -->\n            <ng-container *ngFor=\"let background of backgrounds\">\n              <li (click)=\"onChooseBackground(background)\"><img class=\"backgrounds\" src=\"assets/img/backgrounds/{{ background }}\" alt=\"image\"></li>\n            </ng-container>\n            \n        </ul>\n    </li>\n    </div>\n  </div>\n</nav>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark\">\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <div class=\"row\">\n        <a (click)=\"onHome()\" id=\"home\"><h2>Groups</h2></a>\n        <span>&nbsp</span>\n        <img id=\"userAvatar\" [src]=\"authService.getAvatarPath()\" alt=\"avatar\">\n        <h5 id=\"userName\">{{ authService.getName() }}</h5>\n      </div>\n    </div>\n    <div class=\"collaps navbar-collapse\">\n      \n    </div>\n    <div class=\"navbar-nav nav-right\">\n      <li class=\"dropdown\" appDropdown #r=\"appDropdown\" >\n        <a id=\"btnBackgrounds\" class=\"dropdown-toggle\" role=\"button\">Backgrounds <span class=\"caret\"></span></a>\n        <ul class=\"dropdown-menu dropdown-menu-right pull-right\" [ngClass]=\"{'show':r.isOpen}\">\n            <ng-container *ngFor=\"let background of backgrounds\">\n              <li (click)=\"onChooseBackground(background)\"><img class=\"backgrounds\" src=\"assets/img/backgrounds/{{ background }}\" alt=\"image\"></li>\n            </ng-container>\n            \n        </ul>\n    </li>\n    </div>\n  </div>\n</nav>"
 
 /***/ }),
 
@@ -391,10 +416,12 @@ var HeaderComponent = /** @class */ (function () {
     }
     HeaderComponent.prototype.ngOnInit = function () {
         var _this = this;
+        /** Shraga */
         this.http.get('http://' + this.getipService.getip() + ':4200/user').subscribe(function (res) {
             _this.authService.login(res);
             console.log(_this.authService.getUser());
         });
+        // this.authService.login("dasd");
     };
     HeaderComponent.prototype.onHome = function () {
         // this.elementRef.nativeElement.ownerDocument.body.style.background = 'url(assets/img/backgrounds/background2.jpg) no-repeat center center fixed';
@@ -859,7 +886,7 @@ var GroupDetailService = /** @class */ (function () {
     };
     GroupDetailService.prototype.leaveGroup = function (modalRef) {
         var _this = this;
-        var name = this.authService.getAcc().user.name;
+        var name = this.authService.getAcc().name;
         console.log(name);
         var result = this.group.people.filter(function (el) {
             return el.user.name === name;
@@ -919,7 +946,7 @@ var GroupDetailService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2dyb3Vwcy9ncm91cC1kZXRhaWwvbW9kYWwtY2hhbmdlLWF2YXRhci1ncm91cC9tb2RhbC1jaGFuZ2UtYXZhdGFyLWdyb3VwLmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "#leftPart {\r\n    float: left;\r\n}\r\n\r\n#centerPart {\r\n    width: 150px;\r\n}\r\n\r\n#rightPart {\r\n    float: right;\r\n}\r\n\r\n.btns-back-and-forward {\r\n    width: 50px;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZ3JvdXBzL2dyb3VwLWRldGFpbC9tb2RhbC1jaGFuZ2UtYXZhdGFyLWdyb3VwL21vZGFsLWNoYW5nZS1hdmF0YXItZ3JvdXAuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFdBQVc7QUFDZjs7QUFFQTtJQUNJLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksV0FBVztBQUNmIiwiZmlsZSI6InNyYy9hcHAvZ3JvdXBzL2dyb3VwLWRldGFpbC9tb2RhbC1jaGFuZ2UtYXZhdGFyLWdyb3VwL21vZGFsLWNoYW5nZS1hdmF0YXItZ3JvdXAuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNsZWZ0UGFydCB7XHJcbiAgICBmbG9hdDogbGVmdDtcclxufVxyXG5cclxuI2NlbnRlclBhcnQge1xyXG4gICAgd2lkdGg6IDE1MHB4O1xyXG59XHJcblxyXG4jcmlnaHRQYXJ0IHtcclxuICAgIGZsb2F0OiByaWdodDtcclxufVxyXG5cclxuLmJ0bnMtYmFjay1hbmQtZm9yd2FyZCB7XHJcbiAgICB3aWR0aDogNTBweDtcclxufSJdfQ== */"
 
 /***/ }),
 
@@ -930,7 +957,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">Changing image of group</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"col-xs-12\">\n          <div class=\"row align-items-center justify-content-center\">\n            <div class=\"col-xs-2\" style=\"float: left;\">\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n            <div class=\"col-xs-8\">\n              <img [src]=\"imgPath\" style=\"width: 150px;\">\n            </div>\n            <div class=\"col-xs-2 align-items-right\" style=\"float: right;\">\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n          </div>\n        </div>\n      </div>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">Changing image of group</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"col-xs-12\">\n          <div class=\"row align-items-center justify-content-center\">\n            <div class=\"col-xs-2\" id=\"leftPart\">\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n            <div class=\"col-xs-8\">\n              <img [src]=\"imgPath\" id=\"centerPart\">\n            </div>\n            <div class=\"col-xs-2 align-items-right\" id=\"rightPart\">\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n          </div>\n        </div>\n      </div>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -969,7 +996,6 @@ var ModalChangeAvatarGroupComponent = /** @class */ (function () {
         else {
             this.imgNumber++;
         }
-        console.log(this.imgNumber);
         this.imgPath = "assets/img/default" + this.imgNumber + ".png";
     };
     ModalChangeAvatarGroupComponent.prototype.onBack = function () {
@@ -979,7 +1005,6 @@ var ModalChangeAvatarGroupComponent = /** @class */ (function () {
         else {
             this.imgNumber--;
         }
-        console.log(this.imgNumber);
         this.imgPath = "assets/img/default" + this.imgNumber + ".png";
     };
     ModalChangeAvatarGroupComponent.prototype.onSaveImage = function () {
@@ -1105,12 +1130,14 @@ module.exports = "<div class=\"modal-content modal modal-wide\" style=\"width: a
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ModalMailSenderComponent", function() { return ModalMailSenderComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-bootstrap/modal */ "./node_modules/ngx-bootstrap/modal/fesm5/ngx-bootstrap-modal.js");
-/* harmony import */ var _group_detail_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var src_app_getip_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/getip.service */ "./src/app/getip.service.ts");
+/* harmony import */ var _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../../../auth/auth.service */ "./src/app/auth/auth.service.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-bootstrap/modal */ "./node_modules/ngx-bootstrap/modal/fesm5/ngx-bootstrap-modal.js");
+/* harmony import */ var _group_detail_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var src_app_getip_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/getip.service */ "./src/app/getip.service.ts");
+
 
 
 
@@ -1119,13 +1146,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ModalMailSenderComponent = /** @class */ (function () {
-    function ModalMailSenderComponent(modalRef, groupDetailService, router, route, http, getipService) {
+    function ModalMailSenderComponent(modalRef, groupDetailService, router, route, http, getipService, authService) {
         this.modalRef = modalRef;
         this.groupDetailService = groupDetailService;
         this.router = router;
         this.route = route;
         this.http = http;
         this.getipService = getipService;
+        this.authService = authService;
     }
     ModalMailSenderComponent.prototype.ngOnInit = function () {
     };
@@ -1134,7 +1162,7 @@ var ModalMailSenderComponent = /** @class */ (function () {
         var resultJson = {
             groupId: this.groupDetailService.getGroupId(),
             subject: this.subject,
-            text: this.text
+            text: this.text + "\n -- \n " + this.authService.getName() + " " + this.authService.getEmail()
         };
         console.log(resultJson);
         this.http.post('http://' + this.getipService.getip() + ':5000/api/sendEmail', resultJson).subscribe(function (res) {
@@ -1145,20 +1173,20 @@ var ModalMailSenderComponent = /** @class */ (function () {
         });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
     ], ModalMailSenderComponent.prototype, "subject", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Input"])(),
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
     ], ModalMailSenderComponent.prototype, "text", void 0);
     ModalMailSenderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Component"])({
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
             selector: 'app-modal-mail-sender',
             template: __webpack_require__(/*! ./modal-mail-sender.component.html */ "./src/app/groups/group-detail/modal-mail-sender/modal-mail-sender.component.html"),
             styles: [__webpack_require__(/*! ./modal-mail-sender.component.css */ "./src/app/groups/group-detail/modal-mail-sender/modal-mail-sender.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_3__["BsModalRef"], _group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"], _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], src_app_getip_service__WEBPACK_IMPORTED_MODULE_6__["GetipService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_4__["BsModalRef"], _group_detail_service__WEBPACK_IMPORTED_MODULE_5__["GroupDetailService"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"], _angular_router__WEBPACK_IMPORTED_MODULE_6__["ActivatedRoute"], _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], src_app_getip_service__WEBPACK_IMPORTED_MODULE_7__["GetipService"], _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"]])
     ], ModalMailSenderComponent);
     return ModalMailSenderComponent;
 }());
@@ -1375,7 +1403,7 @@ module.exports = "\r\n/* Hexagons */\r\n#hexGrid {\r\n    overflow: hidden;\r\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ul id=\"hexGrid\">\n    <ng-container *ngFor=\"let person of people | filter : ['user','name'] : namePersonSearch : 'includes'; let i = index\">\n        <ng-container [ngSwitch]=\"person.user.name\">\n            <li class=\"hex\" *ngSwitchCase=\"authService.getAcc().user.name\">\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n            \n            <li class=\"hex\" *ngSwitchDefault>\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                        \n                    <button type=\"button\" style=\"left: 60px; height: 24px;\" class=\"btn btn-danger\" tooltip=\"Remove Him\"  placement=\"bottom\" (click)=\"onRemove(i)\"><i class=\"fa fa-times\" style=\"right: 6px; top: 1px; bottom: 0px;\"></i></button>\n                    <label class=\"switch\" tooltip=\"Admin\" placement=\"bottom\">\n                        <input type=\"checkbox\" name=\"admin\" id=\"admin\" [checked]=\"person.admin\" (change)=\"checkValueAdmin(i)\">\n                        <span class=\"slider round\"></span>\n                    </label>\n                    <br>\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n        </ng-container>      \n    </ng-container>\n    <li *ngIf=\"admin\" class=\"hex\" (click)=\"onAddPerson()\">\n        <a class=\"hexIn\">\n            <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\n            <h1>Add a new Person</h1>\n            <p>Add a new Person</p>\n        </a>\n    </li>\n</ul>"
+module.exports = "<ul id=\"hexGrid\">\n    <ng-container *ngFor=\"let person of people | filter : ['user','name'] : namePersonSearch : 'includes'; let i = index\">\n        <ng-container [ngSwitch]=\"person.user.name\">\n            <li class=\"hex\" *ngSwitchCase=\"authService.getAcc().name\">\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n            \n            <li class=\"hex\" *ngSwitchDefault>\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                        \n                    <button type=\"button\" style=\"left: 60px; height: 24px;\" class=\"btn btn-danger\" tooltip=\"Remove Him\"  placement=\"bottom\" (click)=\"onRemove(i)\"><i class=\"fa fa-times\" style=\"right: 6px; top: 1px; bottom: 0px;\"></i></button>\n                    <label class=\"switch\" tooltip=\"Admin\" placement=\"bottom\">\n                        <input type=\"checkbox\" name=\"admin\" id=\"admin\" [checked]=\"person.admin\" (change)=\"checkValueAdmin(i)\">\n                        <span class=\"slider round\"></span>\n                    </label>\n                    <br>\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n        </ng-container>      \n    </ng-container>\n    <li *ngIf=\"admin\" class=\"hex\" (click)=\"onAddPerson()\">\n        <a class=\"hexIn\">\n            <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\n            <h1>Add a new Person</h1>\n            <p>Add a new Person</p>\n        </a>\n    </li>\n</ul>"
 
 /***/ }),
 
@@ -1412,7 +1440,7 @@ var PeoplegroupListComponent = /** @class */ (function () {
     PeoplegroupListComponent.prototype.ngOnInit = function () {
         this.people = this.groupDetailService.getPeople();
         // console.log("asdasd");
-        // console.log(this.people);
+        console.log(this.people);
         // console.log(this.groupDetailService.getPeople());
     };
     PeoplegroupListComponent.prototype.checkValueAdmin = function (index) {
@@ -1570,7 +1598,7 @@ module.exports = "/* .modal-backdrop{z-index: 1050;}\r\n.modal{z-index: 1060;} *
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\"> {{ title }} </h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"onCloseModal()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"jumbotron\">\n          <br>\n          <!-- <div class=\"input-group\" *ngIf=\"!addPeople\">\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\">\n          </div> -->\n          <!-- <div class=\"input-group\"> -->\n            <label for=\"nameGroup\">Name of Group</label>\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\" [disabled]=\"isInvalidInputName()\">\n          <!-- </div> -->\n          <br>\n          <label for=\"name\">Search of people</label>\n          <input class=\"form-control\" type=\"text\" name=\"name\" [(ngModel)]=\"inputName\" #namee=\"ngModel\" placeholder=\"Search of People\">\n          <br>\n          <label for=\"description\">Description</label>\n          <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\" [disabled]=\"isInvalidInputName()\"></textarea>\n          <br>\n          <div id=\"horizscroll\">\n            <div class=\"inlinee\" *ngFor=\"let person of personGroupService.getPeopleToAdd(); let i = index;\">\n              <div class=\"d-flex flex-column align-items-center\">\n                  <div class=\"\"><app-person-group [nameToAdd]=\"person.name\" [person]=\"person\" [indexPerson]=\"i\"></app-person-group></div>\n                  <div class=\"\"><p>{{ person.user.name }}</p></div>\n                  <!-- <div class=\"\"><p>Yeagor Kryshniov Andreevich</p></div> -->\n                </div>\n            </div>\n          </div>\n          <br>\n          <div class=\"col-xs-12\">\n            <ng-container *ngFor=\"let person of personGroupService.getPeople() | filterdontshowinstart: 'name' : inputName: 'addpeople'\">\n              <!-- <app-person *ngIf=\"checking(person.name)\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person> -->\n              <app-person *ngIf=\"person.name !== authService.getAcc().user.name\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person>\n            </ng-container>\n          </div>\n        </div>\n      </div> \n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseModal()\">Close</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\" [disabled]=\"!personGroupService.getPeopleToAdd() || personGroupService.getPeopleToAdd().length === 0\">Save changes</button>\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Save changes</button> -->\n  </div>\n</div>"
+module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\"> {{ title }} </h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"onCloseModal()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"jumbotron\">\n          <br>\n          <!-- <div class=\"input-group\" *ngIf=\"!addPeople\">\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\">\n          </div> -->\n          <!-- <div class=\"input-group\"> -->\n            <label for=\"nameGroup\">Name of Group</label>\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\" [disabled]=\"isInvalidInputName()\">\n          <!-- </div> -->\n          <br>\n          <label for=\"name\">Search of people</label>\n          <input class=\"form-control\" type=\"text\" name=\"name\" [(ngModel)]=\"inputName\" #namee=\"ngModel\" placeholder=\"Search of People\">\n          <br>\n          <label for=\"description\">Description</label>\n          <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\" [disabled]=\"isInvalidInputName()\"></textarea>\n          <br>\n          <div id=\"horizscroll\">\n            <div class=\"inlinee\" *ngFor=\"let person of personGroupService.getPeopleToAdd(); let i = index;\">\n              <div class=\"d-flex flex-column align-items-center\">\n                  <div class=\"\"><app-person-group [nameToAdd]=\"person.name\" [person]=\"person\" [indexPerson]=\"i\"></app-person-group></div>\n                  <div class=\"\"><p>{{ person.user.name }}</p></div>\n                  <!-- <div class=\"\"><p>Yeagor Kryshniov Andreevich</p></div> -->\n                </div>\n            </div>\n          </div>\n          <br>\n          <div class=\"col-xs-12\">\n            <ng-container *ngFor=\"let person of personGroupService.getPeople() | filterdontshowinstart: 'name' : inputName: 'addpeople'\">\n              <!-- <app-person *ngIf=\"checking(person.name)\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person> -->\n              <app-person *ngIf=\"person.name !== authService.getAcc().name\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person>\n            </ng-container>\n          </div>\n        </div>\n      </div> \n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseModal()\">Close</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\" [disabled]=\"!personGroupService.getPeopleToAdd() || personGroupService.getPeopleToAdd().length === 0\">Save changes</button>\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Save changes</button> -->\n  </div>\n</div>"
 
 /***/ }),
 
@@ -1635,7 +1663,7 @@ var GroupNewModalComponent = /** @class */ (function () {
         this.inputName = "";
     };
     GroupNewModalComponent.prototype.checking = function (str) {
-        if (!this.inputName || this.inputName.length < 3 || str === this.authService.getAcc().user.name)
+        if (!this.inputName || this.inputName.length < 3 || str === this.authService.getAcc().name)
             return false;
         if (str.toUpperCase().substr(0, this.inputName.length).indexOf(this.inputName.toUpperCase()) >= 0) {
             // console.log(true);
@@ -1658,8 +1686,12 @@ var GroupNewModalComponent = /** @class */ (function () {
         var img = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
         console.log(img);
         console.log(this.personGroupService.getPeopleToAdd());
-        // this.personGroupService.addAdminPeopleToAdd(this.authService.getAcc());
-        this.personGroupService.addMyAccountPeopleToAdd(this.authService.getAcc());
+        var myacc = {
+            user: this.authService.getAcc(),
+            admin: true
+        };
+        // this.personGroupService.addAdminPeopleToAdd(myacc);
+        this.personGroupService.addMyAccountPeopleToAdd(myacc);
         console.log(this.personGroupService.getPeopleToAdd());
         var resGroup = {
             name: this.nameGroup,
@@ -2070,7 +2102,7 @@ var GroupsListComponent = /** @class */ (function () {
         this.router = router;
     }
     GroupsListComponent.prototype.ngOnInit = function () {
-        this.user = this.authService.getAcc().user.name;
+        this.user = this.authService.getAcc().name;
     };
     // checking(str) {
     //   if(!this.nameGroupp || this.nameGroupp.length < 3) return true;
@@ -2175,12 +2207,11 @@ var GroupsComponent = /** @class */ (function () {
     }
     GroupsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonNotAdmin/' + this.authService.getAcc().user._id).subscribe(function (res) {
+        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonNotAdmin/' + this.authService.getAcc()._id).subscribe(function (res) {
             _this.groups = res;
-            console.log(_this.groups);
             // console.log(this.groups);
         });
-        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonAdmin/' + this.authService.getAcc().user._id).subscribe(function (res) {
+        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonAdmin/' + this.authService.getAcc()._id).subscribe(function (res) {
             _this.groupsAdmin = res;
         });
     };
