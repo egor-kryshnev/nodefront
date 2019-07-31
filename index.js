@@ -8,7 +8,7 @@ const passport = require('passport');
 var authRouter = require('./auth');
 const session = require("express-session");
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 4200;
 
 configurePassport();
 
@@ -39,7 +39,21 @@ app.use((req, res, next) => {
         next();
 });
 app.get('/user', function(req, res){
-    res.send(req.user);
+    if(req.user.id === "1"){
+        var jsn = {
+            displayName: "user1@example.com",
+            exp: 1564478117,
+            firstName: "user1@example.com",
+            iat: 1564474517,
+            id: "5d40135be04be0f13756f2b9",
+            jti: "2fabe815-4c9b-4da6-8dda-ce8d2eb566d1",
+            lastName: "user1@example.com",
+            mail: "user1@example.com"
+        } 
+    res.send(jsn);
+    } else {
+        res.send(req.user);
+    }
 });
 app.use('/', express.static(__dirname + '/public'));
 

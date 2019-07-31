@@ -81,7 +81,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-header></app-header>\n<!-- <div class=\"container\"> -->\n  <!-- <div [ngStyle]=\"{'background-image': 'url(./assets/img/wallpaper.jpg)'}\"> -->\n    <div class=\"row\" >\n      <div class=\"col-lg-12\">\n        <router-outlet></router-outlet>\n      </div>\n    </div>\n  <!-- </div> -->\n<!-- </div> -->\n"
+module.exports = "<app-header></app-header>\r\n<!-- <div class=\"container\"> -->\r\n  <!-- <div [ngStyle]=\"{'background-image': 'url(./assets/img/wallpaper.jpg)'}\"> -->\r\n    <div class=\"row\" >\r\n      <div class=\"col-lg-12\">\r\n        <router-outlet></router-outlet>\r\n      </div>\r\n    </div>\r\n  <!-- </div> -->\r\n<!-- </div> -->\r\n"
 
 /***/ }),
 
@@ -159,6 +159,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./groups/group-detail/group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
 /* harmony import */ var _groups_group_detail_modal_change_avatar_group_modal_change_avatar_group_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./groups/group-detail/modal-change-avatar-group/modal-change-avatar-group.component */ "./src/app/groups/group-detail/modal-change-avatar-group/modal-change-avatar-group.component.ts");
 /* harmony import */ var _shared_shared_module__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./shared/shared.module */ "./src/app/shared/shared.module.ts");
+/* harmony import */ var _core_header_modal_change_avatar_account_modal_change_avatar_account_component__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./core/header/modal-change-avatar-account/modal-change-avatar-account.component */ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.ts");
+
 
 
 
@@ -213,7 +215,8 @@ var AppModule = /** @class */ (function () {
                 _groups_group_detail_modal_change_avatar_group_modal_change_avatar_group_component__WEBPACK_IMPORTED_MODULE_30__["ModalChangeAvatarGroupComponent"],
                 _groups_group_detail_modal_change_description_modal_change_description_component__WEBPACK_IMPORTED_MODULE_3__["ModalChangeDescriptionComponent"],
                 _groups_group_detail_modal_mail_sender_modal_mail_sender_component__WEBPACK_IMPORTED_MODULE_2__["ModalMailSenderComponent"],
-                _groups_group_detail_peoplegroup_list_modal_change_avatar_person_modal_change_avatar_person_component__WEBPACK_IMPORTED_MODULE_1__["ModalChangeAvatarPersonComponent"]
+                _groups_group_detail_peoplegroup_list_modal_change_avatar_person_modal_change_avatar_person_component__WEBPACK_IMPORTED_MODULE_1__["ModalChangeAvatarPersonComponent"],
+                _core_header_modal_change_avatar_account_modal_change_avatar_account_component__WEBPACK_IMPORTED_MODULE_32__["ModalChangeAvatarAccountComponent"]
                 // DropdownDirective
             ],
             imports: [
@@ -244,7 +247,8 @@ var AppModule = /** @class */ (function () {
                 _groups_group_detail_modal_change_avatar_group_modal_change_avatar_group_component__WEBPACK_IMPORTED_MODULE_30__["ModalChangeAvatarGroupComponent"],
                 _groups_group_detail_modal_change_description_modal_change_description_component__WEBPACK_IMPORTED_MODULE_3__["ModalChangeDescriptionComponent"],
                 _groups_group_detail_modal_mail_sender_modal_mail_sender_component__WEBPACK_IMPORTED_MODULE_2__["ModalMailSenderComponent"],
-                _groups_group_detail_peoplegroup_list_modal_change_avatar_person_modal_change_avatar_person_component__WEBPACK_IMPORTED_MODULE_1__["ModalChangeAvatarPersonComponent"]
+                _groups_group_detail_peoplegroup_list_modal_change_avatar_person_modal_change_avatar_person_component__WEBPACK_IMPORTED_MODULE_1__["ModalChangeAvatarPersonComponent"],
+                _core_header_modal_change_avatar_account_modal_change_avatar_account_component__WEBPACK_IMPORTED_MODULE_32__["ModalChangeAvatarAccountComponent"]
             ]
         })
     ], AppModule);
@@ -292,11 +296,17 @@ var AuthService = /** @class */ (function () {
         /** Shraga */
         this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](user.id, user.displayName, '14', "assets/img/guest.png", user.mail);
         this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe(function (res) {
-            if (res !== { message: "User created!" }) {
+            if (res != { message: "User created!" }) {
                 _this.user = new _core_header_peopleDb_model__WEBPACK_IMPORTED_MODULE_1__["PeopleDb"](res._id, res.name, res.number, res.avatarPath, res.email);
             }
         });
         // this.user = new PeopleDb('5d2594e36fcb691a0d178a71', 'first', '1','assets/img/guest.png' , 'first@test.com');
+        // this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe((res: any) => {
+        //     console.log(res);
+        //     if(res != { message: "User created!" }){
+        //         this.user = new PeopleDb(res._id, res.name, res.number, res.avatarPath, res.email);
+        //     }
+        // });
     };
     AuthService.prototype.logout = function () {
     };
@@ -309,6 +319,9 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.getName = function () {
         return this.user.name;
     };
+    AuthService.prototype.getId = function () {
+        return this.user._id;
+    };
     AuthService.prototype.getEmail = function () {
         return this.user.email;
     };
@@ -316,6 +329,19 @@ var AuthService = /** @class */ (function () {
         return this.user.avatarPath;
     };
     AuthService.prototype.setAvatarPath = function (avatar) {
+        this.user.avatarPath = avatar;
+        this.http.put('http://' + this.getipService.getip() + ':5000/api/updateUser', this.user).subscribe(function (res) {
+            console.log(res);
+            if (res === { message: "User Updated!" }) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+        return false;
+    };
+    AuthService.prototype.setAvatarPathLocal = function (avatar) {
         this.user.avatarPath = avatar;
     };
     AuthService.prototype.getUser = function () {
@@ -375,7 +401,7 @@ module.exports = "/* body {\r\n    background: url(../../../assets/img/backgroun
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark\">\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <div class=\"row\">\n        <a (click)=\"onHome()\" id=\"home\"><h2>Groups</h2></a>\n        <span>&nbsp</span>\n        <img id=\"userAvatar\" [src]=\"authService.getAvatarPath()\" alt=\"avatar\">\n        <h5 id=\"userName\">{{ authService.getName() }}</h5>\n      </div>\n    </div>\n    <div class=\"collaps navbar-collapse\">\n      \n    </div>\n    <div class=\"navbar-nav nav-right\">\n      <li class=\"dropdown\" appDropdown #r=\"appDropdown\" >\n        <a id=\"btnBackgrounds\" class=\"dropdown-toggle\" role=\"button\">Backgrounds <span class=\"caret\"></span></a>\n        <ul class=\"dropdown-menu dropdown-menu-right pull-right\" [ngClass]=\"{'show':r.isOpen}\">\n            <ng-container *ngFor=\"let background of backgrounds\">\n              <li (click)=\"onChooseBackground(background)\"><img class=\"backgrounds\" src=\"assets/img/backgrounds/{{ background }}\" alt=\"image\"></li>\n            </ng-container>\n            \n        </ul>\n    </li>\n    </div>\n  </div>\n</nav>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark\">\r\n  <div class=\"container-fluid\">\r\n    <div class=\"navbar-header\">\r\n      <div class=\"row\">\r\n        <a (click)=\"onHome()\" id=\"home\"><h2>Groups</h2></a>\r\n        <span>&nbsp</span>\r\n        <img id=\"userAvatar\" [src]=\"authService.getAvatarPath()\" alt=\"avatar\" (click)=\"onChangeAvatar()\">\r\n        <h5 id=\"userName\">{{ authService.getName() }}</h5>\r\n      </div>\r\n    </div>\r\n    <div class=\"collaps navbar-collapse\">\r\n      \r\n    </div>\r\n    <div class=\"navbar-nav nav-right\">\r\n      <li class=\"dropdown\" appDropdown #r=\"appDropdown\" >\r\n        <a id=\"btnBackgrounds\" class=\"dropdown-toggle\" role=\"button\">Backgrounds <span class=\"caret\"></span></a>\r\n        <ul class=\"dropdown-menu dropdown-menu-right pull-right\" [ngClass]=\"{'show':r.isOpen}\">\r\n            <ng-container *ngFor=\"let background of backgrounds\">\r\n              <li (click)=\"onChooseBackground(background)\"><img class=\"backgrounds\" src=\"assets/img/backgrounds/{{ background }}\" alt=\"image\"></li>\r\n            </ng-container>\r\n            \r\n        </ul>\r\n    </li>\r\n    </div>\r\n  </div>\r\n</nav>"
 
 /***/ }),
 
@@ -396,6 +422,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../../groups/group-detail/group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _modal_change_avatar_account_modal_change_avatar_account_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modal-change-avatar-account/modal-change-avatar-account.component */ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.ts");
+/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ngx-bootstrap/modal */ "./node_modules/ngx-bootstrap/modal/fesm5/ngx-bootstrap-modal.js");
+
+
 
 
 
@@ -404,7 +434,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var HeaderComponent = /** @class */ (function () {
-    function HeaderComponent(route, router, groupDetailService, elementRef, http, getipService, authService) {
+    function HeaderComponent(route, router, groupDetailService, elementRef, http, getipService, authService, modalRef, modalService) {
         this.route = route;
         this.router = router;
         this.groupDetailService = groupDetailService;
@@ -412,6 +442,8 @@ var HeaderComponent = /** @class */ (function () {
         this.http = http;
         this.getipService = getipService;
         this.authService = authService;
+        this.modalRef = modalRef;
+        this.modalService = modalService;
         this.backgrounds = ['background1.jpg', 'background2.jpg', 'background3.jpg', 'background4.jpg', 'background5.jpg'];
     }
     HeaderComponent.prototype.ngOnInit = function () {
@@ -431,15 +463,123 @@ var HeaderComponent = /** @class */ (function () {
     HeaderComponent.prototype.onChooseBackground = function (background) {
         this.elementRef.nativeElement.ownerDocument.body.style.background = 'url(assets/img/backgrounds/' + background + ') no-repeat center center fixed';
     };
+    HeaderComponent.prototype.onChangeAvatar = function () {
+        this.modalRef = this.modalService.show(_modal_change_avatar_account_modal_change_avatar_account_component__WEBPACK_IMPORTED_MODULE_7__["ModalChangeAvatarAccountComponent"], {
+            initialState: {
+                title: 'Change Avatar Of Account',
+                imgPath: this.authService.getAvatarPath()
+            }
+        });
+    };
     HeaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_6__["Component"])({
             selector: 'app-header',
             template: __webpack_require__(/*! ./header.component.html */ "./src/app/core/header/header.component.html"),
             styles: [__webpack_require__(/*! ./header.component.css */ "./src/app/core/header/header.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"], _angular_core__WEBPACK_IMPORTED_MODULE_6__["ElementRef"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _getip_service__WEBPACK_IMPORTED_MODULE_2__["GetipService"], _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _groups_group_detail_group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"], _angular_core__WEBPACK_IMPORTED_MODULE_6__["ElementRef"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"], _getip_service__WEBPACK_IMPORTED_MODULE_2__["GetipService"], _auth_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"], ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_8__["BsModalRef"], ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_8__["BsModalService"]])
     ], HeaderComponent);
     return HeaderComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.css":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.css ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvcmUvaGVhZGVyL21vZGFsLWNoYW5nZS1hdmF0YXItYWNjb3VudC9tb2RhbC1jaGFuZ2UtYXZhdGFyLWFjY291bnQuY29tcG9uZW50LmNzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.html":
+/*!****************************************************************************************************!*\
+  !*** ./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.html ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{ title }}</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <div class=\"container\">\r\n        <div class=\"col-xs-12\">\r\n          <div class=\"row align-items-center justify-content-center\">\r\n            <div class=\"col-xs-2\" style=\"float: left;\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n            <div class=\"col-xs-8\">\r\n              <img [src]=\"imgPath\" style=\"width: 150px;\">\r\n            </div>\r\n            <div class=\"col-xs-2 align-items-right\" style=\"float: right;\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveAvatar()\">Save</button>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.ts":
+/*!**************************************************************************************************!*\
+  !*** ./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.ts ***!
+  \**************************************************************************************************/
+/*! exports provided: ModalChangeAvatarAccountComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ModalChangeAvatarAccountComponent", function() { return ModalChangeAvatarAccountComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-bootstrap/modal */ "./node_modules/ngx-bootstrap/modal/fesm5/ngx-bootstrap-modal.js");
+/* harmony import */ var src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/auth/auth.service */ "./src/app/auth/auth.service.ts");
+
+// import { PeopleGroup } from './../../../peopleGroup.model';
+
+
+
+// import { GroupDetailService } from '../../group-detail.service';
+var ModalChangeAvatarAccountComponent = /** @class */ (function () {
+    function ModalChangeAvatarAccountComponent(modalRef, authService) {
+        this.modalRef = modalRef;
+        this.authService = authService;
+        this.imgNumber = 1;
+    }
+    // imgPath: string = "assets/img/people/person1.png";
+    ModalChangeAvatarAccountComponent.prototype.ngOnInit = function () {
+        // console.log(this.title);
+        // console.log(this.personIndex);
+    };
+    ModalChangeAvatarAccountComponent.prototype.onForward = function () {
+        if (this.imgNumber === 9) {
+            this.imgNumber = 1;
+        }
+        else {
+            this.imgNumber++;
+        }
+        console.log(this.imgNumber);
+        this.imgPath = "assets/img/people/person" + this.imgNumber + ".png";
+    };
+    ModalChangeAvatarAccountComponent.prototype.onBack = function () {
+        if (this.imgNumber === 1) {
+            this.imgNumber = 9;
+        }
+        else {
+            this.imgNumber--;
+        }
+        console.log(this.imgNumber);
+        this.imgPath = "assets/img/people/person" + this.imgNumber + ".png";
+    };
+    ModalChangeAvatarAccountComponent.prototype.onSaveAvatar = function () {
+        if (this.authService.setAvatarPath(this.imgPath)) {
+            this.modalRef.hide();
+        }
+        // this.groupDetailService.updateAvatarOfPerson(this.person, this.personIndex);
+        // this.modalRef.hide();
+        // window.location.reload();
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], ModalChangeAvatarAccountComponent.prototype, "imgPath", void 0);
+    ModalChangeAvatarAccountComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-modal-change-avatar-account',
+            template: __webpack_require__(/*! ./modal-change-avatar-account.component.html */ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.html"),
+            styles: [__webpack_require__(/*! ./modal-change-avatar-account.component.css */ "./src/app/core/header/modal-change-avatar-account/modal-change-avatar-account.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_2__["BsModalRef"], src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]])
+    ], ModalChangeAvatarAccountComponent);
+    return ModalChangeAvatarAccountComponent;
 }());
 
 
@@ -660,7 +800,7 @@ module.exports = "/* Hexagons */\r\n#hexGrid {\r\n    overflow: hidden;\r\n    w
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<br>\n<div class=\"container\">\n  <!-- <div class=\"jumbotron\"> -->\n    <div class=\"input-group\">\n      <input type=\"text\" class=\"form-control\" name=\"namePerson\" [(ngModel)]=\"namePerson\" placeholder=\"Search\">\n    </div>\n    \n  <!-- </div> -->\n</div>\n<hr style=\"border: none;\nbackground-color: black;\nheight: 2px;\">\n<br>\n<div class=\"row\" *ngIf=\"groupDetailService.existGroup()\">\n  <div class=\"col-lg-12\">\n\n    <div class=\"container align-items-center justify-content-center\">\n      <div class=\"input-group\" style=\"width: 475px; margin: 0 auto; float: none;\" *ngIf=\"changeName\">\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" [value]=\"groupDetailService.getGroupName()\" [(ngModel)]=\"changingName\">\n        <div class=\"input-group-prepend\">\n          <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"savename\" (click)=\"onSaveName(changingName)\">Save Name</button>\n          <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"savename\" (click)=\"onCancelChangingName()\">Cancel</button>\n        </div>\n      </div>\n    </div>\n\n    <h1 style=\"text-align: center\" *ngIf=\"!changeName\"> \n      <img [src]=\"groupDetailService.getGroupImagePath()\" style=\"width: 50px;\" alt=\"\"/>\n      <span> {{ groupDetailService.getGroupName() }}</span>\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" *ngIf=\"admin\" (click)=\"onChangeName()\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Change Name</button>\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" *ngIf=\"admin\" (click)=\"onChangAvatarGroup()\"><i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i> Change Avatar</button>\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" (click)=\"onSendMailForGroup()\"><i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i> Send Mail</button>\n    </h1>\n    \n    <hr style=\"border: none;\n    background-color: black;\n    height: 2px;\">\n    <div class=\"row\">\n    \n      <div class=\"col-lg-9\">\n        <app-peoplegroup-list [namePersonSearch]=\"namePerson\" [people]=\"groupDetailService.getPeople()\" [admin]=\"admin\"></app-peoplegroup-list>\n      </div>\n      <div class=\"col-lg-3\">\n        <div>\n          <!-- <div class=\"row\"> -->\n            <label style=\"margin-left: 5px;\"><h1>Description</h1></label>\n            <button class=\"btn btn-warning\" style=\"position: relative; margin-bottom: 15px; margin-left: 5px;\" (click)=\"onChangeDescriptionGroup()\">Change Description</button>\n          <!-- </div> -->\n          <cdk-virtual-scroll-viewport style=\"height: 600px;\" itemSize=\"250\" class=\"viewport\">\n            <h3>{{ description }}</h3>\n          </cdk-virtual-scroll-viewport>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n<button class=\"btn btn-danger\" *ngIf=\"admin\" style=\"float: right; margin-right: 20px;\" (click)=\"onRemoveGroup()\">Remove Group</button>\n<button class=\"btn btn-danger\" style=\"float: right; margin-right: 20px;\" (click)=\"onLeaveFromGroup()\">Leave Group</button>\n"
+module.exports = "<br>\r\n<div class=\"container\">\r\n  <!-- <div class=\"jumbotron\"> -->\r\n    <div class=\"input-group\">\r\n      <input type=\"text\" class=\"form-control\" name=\"namePerson\" [(ngModel)]=\"namePerson\" placeholder=\"Search\">\r\n    </div>\r\n    \r\n  <!-- </div> -->\r\n</div>\r\n<hr style=\"border: none;\r\nbackground-color: black;\r\nheight: 2px;\">\r\n<br>\r\n<div class=\"row\" *ngIf=\"groupDetailService.existGroup()\">\r\n  <div class=\"col-lg-12\">\r\n\r\n    <div class=\"container align-items-center justify-content-center\">\r\n      <div class=\"input-group\" style=\"width: 475px; margin: 0 auto; float: none;\" *ngIf=\"changeName\">\r\n        <input type=\"text\" class=\"form-control\" placeholder=\"\" [value]=\"groupDetailService.getGroupName()\" [(ngModel)]=\"changingName\">\r\n        <div class=\"input-group-prepend\">\r\n          <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"savename\" (click)=\"onSaveName(changingName)\">Save Name</button>\r\n          <button class=\"btn btn-outline-secondary\" type=\"button\" id=\"savename\" (click)=\"onCancelChangingName()\">Cancel</button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n    <h1 style=\"text-align: center\" *ngIf=\"!changeName\"> \r\n      <img [src]=\"groupDetailService.getGroupImagePath()\" style=\"width: 50px;\" alt=\"\"/>\r\n      <span> {{ groupDetailService.getGroupName() }}</span>\r\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" *ngIf=\"admin\" (click)=\"onChangeName()\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Change Name</button>\r\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" *ngIf=\"admin\" (click)=\"onChangAvatarGroup()\"><i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i> Change Avatar</button>\r\n      <button class=\"btn btn-primary\" style=\"margin-left: 25px;\" (click)=\"onSendMailForGroup()\"><i class=\"fa fa-file-image-o\" aria-hidden=\"true\"></i> Send Mail</button>\r\n    </h1>\r\n    \r\n    <hr style=\"border: none;\r\n    background-color: black;\r\n    height: 2px;\">\r\n    <div class=\"row\">\r\n    \r\n      <div class=\"col-lg-9\">\r\n        <app-peoplegroup-list [namePersonSearch]=\"namePerson\" [people]=\"groupDetailService.getPeople()\" [admin]=\"admin\"></app-peoplegroup-list>\r\n      </div>\r\n      <div class=\"col-lg-3\">\r\n        <div>\r\n          <!-- <div class=\"row\"> -->\r\n            <label style=\"margin-left: 5px;\"><h1>Description</h1></label>\r\n            <button class=\"btn btn-warning\" style=\"position: relative; margin-bottom: 15px; margin-left: 5px;\" (click)=\"onChangeDescriptionGroup()\">Change Description</button>\r\n          <!-- </div> -->\r\n          <cdk-virtual-scroll-viewport style=\"height: 600px;\" itemSize=\"250\" class=\"viewport\">\r\n            <h3>{{ description }}</h3>\r\n          </cdk-virtual-scroll-viewport>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<button class=\"btn btn-danger\" *ngIf=\"admin\" style=\"float: right; margin-right: 20px;\" (click)=\"onRemoveGroup()\">Remove Group</button>\r\n<button class=\"btn btn-danger\" style=\"float: right; margin-right: 20px;\" (click)=\"onLeaveFromGroup()\">Leave Group</button>\r\n"
 
 /***/ }),
 
@@ -957,7 +1097,7 @@ module.exports = "#leftPart {\r\n    float: left;\r\n}\r\n\r\n#centerPart {\r\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">Changing image of group</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"col-xs-12\">\n          <div class=\"row align-items-center justify-content-center\">\n            <div class=\"col-xs-2\" id=\"leftPart\">\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n            <div class=\"col-xs-8\">\n              <img [src]=\"imgPath\" id=\"centerPart\">\n            </div>\n            <div class=\"col-xs-2 align-items-right\" id=\"rightPart\">\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n          </div>\n        </div>\n      </div>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">Changing image of group</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <div class=\"container\">\r\n        <div class=\"col-xs-12\">\r\n          <div class=\"row align-items-center justify-content-center\">\r\n            <div class=\"col-xs-2\" id=\"leftPart\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n            <div class=\"col-xs-8\">\r\n              <img [src]=\"imgPath\" id=\"centerPart\">\r\n            </div>\r\n            <div class=\"col-xs-2 align-items-right\" id=\"rightPart\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle btns-back-and-forward\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1045,7 +1185,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">{{ title }}</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <!-- <h5>Yoy really want to do this</h5> -->\n    <label for=\"description\">Description</label>\n    <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\"></textarea>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Submit</button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{ title }}</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <!-- <h5>Yoy really want to do this</h5> -->\r\n    <label for=\"description\">Description</label>\r\n    <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\"></textarea>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Submit</button>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1115,7 +1255,7 @@ module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Saira+Co
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content modal modal-wide\" style=\"width: auto; max-width: 600px;\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">Mail Sender</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\" style=\"width: auto; height: auto; max-height: 100%;\">\n      <div class=\"container\">\n        <div class=\"col-xs-12\">\n            <form class=\"form\">\n              <fieldset class=\"form__fieldset\">\n            \n                <legend class=\"form__legend\">Mail for all members of group</legend>\n            \n                \n                <label class=\"form__label\" for=\"subject\"></label>\n                <input class=\"form__input\" type=\"text\" placeholder=\"Subject\" id=\"subject\" name=\"subject\" [(ngModel)]=\"subject\" required autocomplete=\"off\">\n                <br>\n                <!-- <label class=\"form__label\" for=\"message\"></label>\n                <input class=\"form__input\" type=\"text\" placeholder=\"Message\" id=\"message\" required autocomplete=\"off\"> -->\n                <!-- <textarea class=\"form_input\" name=\"\" id=\"\" cols=\"40\" rows=\"10\"></textarea> -->\n\n                <textarea placeholder=\"Yor text\" id=\"text\" name=\"text\" rows=\"4\" [(ngModel)]=\"text\" style=\"overflow: hidden; word-wrap: break-word; resize: none; height: 150px; \"></textarea>\n\n                <button class=\"form__btn\" (click)=\"onSend()\">\n                  <!-- <svg class=\"form__indicator\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path class=\"progressbar\" d=\"\"></path>\n                  </svg> -->\n                  send\n                </button>\n            \n              </fieldset>\n            </form>\n        </div>\n      </div>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button> -->\n  </div>\n</div>\n  "
+module.exports = "<div class=\"modal-content modal modal-wide\" style=\"width: auto; max-width: 600px;\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">Mail Sender</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\" style=\"width: auto; height: auto; max-height: 100%;\">\r\n      <div class=\"container\">\r\n        <div class=\"col-xs-12\">\r\n            <form class=\"form\">\r\n              <fieldset class=\"form__fieldset\">\r\n            \r\n                <legend class=\"form__legend\">Mail for all members of group</legend>\r\n            \r\n                \r\n                <label class=\"form__label\" for=\"subject\"></label>\r\n                <input class=\"form__input\" type=\"text\" placeholder=\"Subject\" id=\"subject\" name=\"subject\" [(ngModel)]=\"subject\" required autocomplete=\"off\">\r\n                <br>\r\n                <!-- <label class=\"form__label\" for=\"message\"></label>\r\n                <input class=\"form__input\" type=\"text\" placeholder=\"Message\" id=\"message\" required autocomplete=\"off\"> -->\r\n                <!-- <textarea class=\"form_input\" name=\"\" id=\"\" cols=\"40\" rows=\"10\"></textarea> -->\r\n\r\n                <textarea placeholder=\"Yor text\" id=\"text\" name=\"text\" rows=\"4\" [(ngModel)]=\"text\" style=\"overflow: hidden; word-wrap: break-word; resize: none; height: 150px; \"></textarea>\r\n\r\n                <button class=\"form__btn\" (click)=\"onSend()\">\r\n                  <!-- <svg class=\"form__indicator\" xmlns=\"http://www.w3.org/2000/svg\">\r\n                    <path class=\"progressbar\" d=\"\"></path>\r\n                  </svg> -->\r\n                  send\r\n                </button>\r\n            \r\n              </fieldset>\r\n            </form>\r\n        </div>\r\n      </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveImage()\">Save</button> -->\r\n  </div>\r\n</div>\r\n  "
 
 /***/ }),
 
@@ -1213,7 +1353,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">{{ title }}</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <h5>Yoy really want to do this</h5>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Submit</button>\n  </div>\n</div>"
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{ title }}</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <h5>Yoy really want to do this</h5>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Submit</button>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -1296,7 +1436,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\">{{ title }}</h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"col-xs-12\">\n          <div class=\"row align-items-center justify-content-center\">\n            <div class=\"col-xs-2\" style=\"float: left;\">\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n            <div class=\"col-xs-8\">\n              <img [src]=\"imgPath\" style=\"width: 150px;\">\n            </div>\n            <div class=\"col-xs-2 align-items-right\" style=\"float: right;\">\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\n            </div>\n          </div>\n        </div>\n      </div>\n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveAvatar()\">Save</button>\n  </div>\n</div>"
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{ title }}</h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"modalRef.hide()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <div class=\"container\">\r\n        <div class=\"col-xs-12\">\r\n          <div class=\"row align-items-center justify-content-center\">\r\n            <div class=\"col-xs-2\" style=\"float: left;\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onBack()\"><i class=\"fa fa-arrow-circle-o-left fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n            <div class=\"col-xs-8\">\r\n              <img [src]=\"imgPath\" style=\"width: 150px;\">\r\n            </div>\r\n            <div class=\"col-xs-2 align-items-right\" style=\"float: right;\">\r\n              <button type=\"button\" class=\"btn btn-default btn-circle\" style=\"width: 50px;\" (click)=\"onForward()\"><i class=\"fa fa-arrow-circle-o-right fa-2x\" aria-hidden=\"true\"></i></button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"modalRef.hide()\">Cancel</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSaveAvatar()\">Save</button>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -1315,15 +1455,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-bootstrap/modal */ "./node_modules/ngx-bootstrap/modal/fesm5/ngx-bootstrap-modal.js");
 /* harmony import */ var _group_detail_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../group-detail.service */ "./src/app/groups/group-detail/group-detail.service.ts");
+/* harmony import */ var src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/auth/auth.service */ "./src/app/auth/auth.service.ts");
+
 
 
 
 
 
 var ModalChangeAvatarPersonComponent = /** @class */ (function () {
-    function ModalChangeAvatarPersonComponent(modalRef, groupDetailService) {
+    function ModalChangeAvatarPersonComponent(modalRef, groupDetailService, authService) {
         this.modalRef = modalRef;
         this.groupDetailService = groupDetailService;
+        this.authService = authService;
         this.imgNumber = 1;
         this.imgPath = "assets/img/people/person1.png";
     }
@@ -1355,6 +1498,7 @@ var ModalChangeAvatarPersonComponent = /** @class */ (function () {
     ModalChangeAvatarPersonComponent.prototype.onSaveAvatar = function () {
         this.person.user.avatarPath = this.imgPath;
         this.groupDetailService.updateAvatarOfPerson(this.person, this.personIndex);
+        this.authService.setAvatarPathLocal(this.imgPath);
         this.modalRef.hide();
         // window.location.reload();
     };
@@ -1376,7 +1520,7 @@ var ModalChangeAvatarPersonComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./modal-change-avatar-person.component.html */ "./src/app/groups/group-detail/peoplegroup-list/modal-change-avatar-person/modal-change-avatar-person.component.html"),
             styles: [__webpack_require__(/*! ./modal-change-avatar-person.component.css */ "./src/app/groups/group-detail/peoplegroup-list/modal-change-avatar-person/modal-change-avatar-person.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_3__["BsModalRef"], _group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_3__["BsModalRef"], _group_detail_service__WEBPACK_IMPORTED_MODULE_4__["GroupDetailService"], src_app_auth_auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"]])
     ], ModalChangeAvatarPersonComponent);
     return ModalChangeAvatarPersonComponent;
 }());
@@ -1403,7 +1547,7 @@ module.exports = "\r\n/* Hexagons */\r\n#hexGrid {\r\n    overflow: hidden;\r\n 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ul id=\"hexGrid\">\n    <ng-container *ngFor=\"let person of people | filter : ['user','name'] : namePersonSearch : 'includes'; let i = index\">\n        <ng-container [ngSwitch]=\"person.user.name\">\n            <li class=\"hex\" *ngSwitchCase=\"authService.getAcc().name\">\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n            \n            <li class=\"hex\" *ngSwitchDefault>\n                <a class=\"hexIn\">\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\n                    <h1>\n                        {{ person.user.name }}\n                    </h1>\n                    <p *ngIf=\"admin\">\n                        \n                    <button type=\"button\" style=\"left: 60px; height: 24px;\" class=\"btn btn-danger\" tooltip=\"Remove Him\"  placement=\"bottom\" (click)=\"onRemove(i)\"><i class=\"fa fa-times\" style=\"right: 6px; top: 1px; bottom: 0px;\"></i></button>\n                    <label class=\"switch\" tooltip=\"Admin\" placement=\"bottom\">\n                        <input type=\"checkbox\" name=\"admin\" id=\"admin\" [checked]=\"person.admin\" (change)=\"checkValueAdmin(i)\">\n                        <span class=\"slider round\"></span>\n                    </label>\n                    <br>\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\n                    </p>\n    \n                    <p *ngIf=\"!admin\">\n    \n                    </p>\n                </a>\n            </li>\n        </ng-container>      \n    </ng-container>\n    <li *ngIf=\"admin\" class=\"hex\" (click)=\"onAddPerson()\">\n        <a class=\"hexIn\">\n            <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\n            <h1>Add a new Person</h1>\n            <p>Add a new Person</p>\n        </a>\n    </li>\n</ul>"
+module.exports = "<ul id=\"hexGrid\">\r\n    <ng-container *ngFor=\"let person of people | filter : ['user','name'] : namePersonSearch : 'includes'; let i = index\">\r\n        <ng-container [ngSwitch]=\"person.user.name\">\r\n            <li class=\"hex\" *ngSwitchCase=\"authService.getAcc().name\">\r\n                <a class=\"hexIn\">\r\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\r\n                    <h1>\r\n                        {{ person.user.name }}\r\n                    </h1>\r\n                    <p *ngIf=\"admin\">\r\n                    <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button>\r\n                    </p>\r\n    \r\n                    <p *ngIf=\"!admin\">\r\n    \r\n                    </p>\r\n                </a>\r\n            </li>\r\n            \r\n            <li class=\"hex\" *ngSwitchDefault>\r\n                <a class=\"hexIn\">\r\n                    <img [src]=\"person.user.avatarPath\" alt=\"\"/>\r\n                    <h1>\r\n                        {{ person.user.name }}\r\n                    </h1>\r\n                    <p *ngIf=\"admin\">\r\n                        \r\n                    <button type=\"button\" style=\"left: 60px; height: 24px;\" class=\"btn btn-danger\" tooltip=\"Remove Him\"  placement=\"bottom\" (click)=\"onRemove(i)\"><i class=\"fa fa-times\" style=\"right: 6px; top: 1px; bottom: 0px;\"></i></button>\r\n                    <label class=\"switch\" tooltip=\"Admin\" placement=\"bottom\">\r\n                        <input type=\"checkbox\" name=\"admin\" id=\"admin\" [checked]=\"person.admin\" (change)=\"checkValueAdmin(i)\">\r\n                        <span class=\"slider round\"></span>\r\n                    </label>\r\n                    <br>\r\n                    <!-- Change Avatar -->\r\n                    <!-- <button type=\"button\" style=\"width: 24px; height: 24px; right: 72px; top: 40px;\" class=\"btn btn-secondary\" tooltip=\"Change Avatar\" placement=\"top\"><i class=\"fa fa-user-circle\" style=\"right: 4px; top: 2px; bottom: 0px;\" (click)=\"changeAvatarPerson(person, i)\"></i></button> -->\r\n                    </p>\r\n    \r\n                    <p *ngIf=\"!admin\">\r\n    \r\n                    </p>\r\n                </a>\r\n            </li>\r\n        </ng-container>      \r\n    </ng-container>\r\n    <li *ngIf=\"admin\" class=\"hex\" (click)=\"onAddPerson()\">\r\n        <a class=\"hexIn\">\r\n            <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\r\n            <h1>Add a new Person</h1>\r\n            <p>Add a new Person</p>\r\n        </a>\r\n    </li>\r\n</ul>"
 
 /***/ }),
 
@@ -1517,7 +1661,7 @@ module.exports = ".hex {\r\n    position: relative;\r\n    list-style-type: none
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <a class=\"hover list-group-item clearfix\" routerLinkActive=\"active\" [routerLink]=\"[id]\">\n    <div class=\"pull-left\">\n        <h4 class=\"list-group-item-text\">{{ group.name }}</h4>\n    </div>\n</a> -->\n\n<li class=\"hex\">\n    <a class=\"hexIn\" href=\"\">\n        <img src=\"https://cdn.pixabay.com/photo/2016/11/14/17/39/group-1824145_960_720.png\" alt=\"\"/>\n        <h1>{{ group.name }}</h1>\n        <p>{{ group.people.length }} of members</p>\n    </a>\n</li>\n"
+module.exports = "<!-- <a class=\"hover list-group-item clearfix\" routerLinkActive=\"active\" [routerLink]=\"[id]\">\r\n    <div class=\"pull-left\">\r\n        <h4 class=\"list-group-item-text\">{{ group.name }}</h4>\r\n    </div>\r\n</a> -->\r\n\r\n<li class=\"hex\">\r\n    <a class=\"hexIn\" href=\"\">\r\n        <img src=\"https://cdn.pixabay.com/photo/2016/11/14/17/39/group-1824145_960_720.png\" alt=\"\"/>\r\n        <h1>{{ group.name }}</h1>\r\n        <p>{{ group.people.length }} of members</p>\r\n    </a>\r\n</li>\r\n"
 
 /***/ }),
 
@@ -1598,7 +1742,7 @@ module.exports = "/* .modal-backdrop{z-index: 1050;}\r\n.modal{z-index: 1060;} *
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"modal-content\">\n  <div class=\"modal-header\">\n    <h4 class=\"modal-title\"> {{ title }} </h4>\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"onCloseModal()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n  </div>\n  <div class=\"modal-body\">\n      <div class=\"container\">\n        <div class=\"jumbotron\">\n          <br>\n          <!-- <div class=\"input-group\" *ngIf=\"!addPeople\">\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\">\n          </div> -->\n          <!-- <div class=\"input-group\"> -->\n            <label for=\"nameGroup\">Name of Group</label>\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\" [disabled]=\"isInvalidInputName()\">\n          <!-- </div> -->\n          <br>\n          <label for=\"name\">Search of people</label>\n          <input class=\"form-control\" type=\"text\" name=\"name\" [(ngModel)]=\"inputName\" #namee=\"ngModel\" placeholder=\"Search of People\">\n          <br>\n          <label for=\"description\">Description</label>\n          <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\" [disabled]=\"isInvalidInputName()\"></textarea>\n          <br>\n          <div id=\"horizscroll\">\n            <div class=\"inlinee\" *ngFor=\"let person of personGroupService.getPeopleToAdd(); let i = index;\">\n              <div class=\"d-flex flex-column align-items-center\">\n                  <div class=\"\"><app-person-group [nameToAdd]=\"person.name\" [person]=\"person\" [indexPerson]=\"i\"></app-person-group></div>\n                  <div class=\"\"><p>{{ person.user.name }}</p></div>\n                  <!-- <div class=\"\"><p>Yeagor Kryshniov Andreevich</p></div> -->\n                </div>\n            </div>\n          </div>\n          <br>\n          <div class=\"col-xs-12\">\n            <ng-container *ngFor=\"let person of personGroupService.getPeople() | filterdontshowinstart: 'name' : inputName: 'addpeople'\">\n              <!-- <app-person *ngIf=\"checking(person.name)\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person> -->\n              <app-person *ngIf=\"person.name !== authService.getAcc().name\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person>\n            </ng-container>\n          </div>\n        </div>\n      </div> \n  </div>\n  <div class=\"modal-footer\">\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseModal()\">Close</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\" [disabled]=\"!personGroupService.getPeopleToAdd() || personGroupService.getPeopleToAdd().length === 0\">Save changes</button>\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Save changes</button> -->\n  </div>\n</div>"
+module.exports = "<div class=\"modal-content\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\"> {{ title }} </h4>\r\n    <button type=\"button\" class=\"close pull-right\" aria-label=\"Close\" (click)=\"onCloseModal()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n      <div class=\"container\">\r\n        <div class=\"jumbotron\">\r\n          <br>\r\n          <!-- <div class=\"input-group\" *ngIf=\"!addPeople\">\r\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\">\r\n          </div> -->\r\n          <!-- <div class=\"input-group\"> -->\r\n            <label for=\"nameGroup\">Name of Group</label>\r\n            <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Name of Group\" [disabled]=\"isInvalidInputName()\">\r\n          <!-- </div> -->\r\n          <br>\r\n          <label for=\"name\">Search of people</label>\r\n          <input class=\"form-control\" type=\"text\" name=\"name\" [(ngModel)]=\"inputName\" #namee=\"ngModel\" placeholder=\"Search of People\">\r\n          <br>\r\n          <label for=\"description\">Description</label>\r\n          <textarea class=\"form-control\" name=\"description\" id=\"description\" [(ngModel)]=\"description\" cols=\"50\" rows=\"6\" [disabled]=\"isInvalidInputName()\"></textarea>\r\n          <br>\r\n          <div id=\"horizscroll\">\r\n            <div class=\"inlinee\" *ngFor=\"let person of personGroupService.getPeopleToAdd(); let i = index;\">\r\n              <div class=\"d-flex flex-column align-items-center\">\r\n                  <div class=\"\"><app-person-group [nameToAdd]=\"person.name\" [person]=\"person\" [indexPerson]=\"i\"></app-person-group></div>\r\n                  <div class=\"\"><p>{{ person.user.name }}</p></div>\r\n                  <!-- <div class=\"\"><p>Yeagor Kryshniov Andreevich</p></div> -->\r\n                </div>\r\n            </div>\r\n          </div>\r\n          <br>\r\n          <div class=\"col-xs-12\">\r\n            <ng-container *ngFor=\"let person of personGroupService.getPeople() | filterdontshowinstart: 'name' : inputName: 'addpeople'\">\r\n              <!-- <app-person *ngIf=\"checking(person.name)\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person> -->\r\n              <app-person *ngIf=\"person.name !== authService.getAcc().name\" style=\"cursor: pointer;\" (click)=\"onChoosePerson(person)\" [name]=\"person.name\"></app-person>\r\n            </ng-container>\r\n          </div>\r\n        </div>\r\n      </div> \r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" (click)=\"onCloseModal()\">Close</button>\r\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\" [disabled]=\"!personGroupService.getPeopleToAdd() || personGroupService.getPeopleToAdd().length === 0\">Save changes</button>\r\n    <!-- <button type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit()\">Save changes</button> -->\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -1759,7 +1903,7 @@ module.exports = ".inlinee {\r\n    display: inline-block;\r\n    margin-right: 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <div class=\"hover card rounded-circle inlinee\" style=\"background-image: https://www.seekpng.com/png/full/72-729700_account-avatar-face-head-person-profile-user-comments.png;\" [ngStyle]=\"!disabled?{'height' : '140px', 'width' : '140px'} : {'height' : '50px', 'width' : '50px'}\">\n  <div class=\"card-body\"  (click)=\"onMakeLittleCard()\">\n    <p *ngIf=\"!disabled\" class=\"card-title\" style=\"display: inline-block;\">\n      {{ nameToAdd }} <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\n    </p>\n    <br>\n  </div>\n    <div style=\"margin-left: 25%;\" *ngIf=\"!disabled\">\n      <button type=\"button\" class=\"btn btn-danger btn-circle\" tooltip=\"Remove Him\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onRemoveFromList(person)\"><i class=\"fa fa-times\"></i></button>\n      <button type=\"button\" class=\"btn btn-success btn-circle\" tooltip=\"Make Him Admin\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onAdminPerson(indexPerson)\" style=\"margin-left: 15px;\"><i class=\"fa fa-user\"></i></button>\n    </div>\n</div> -->\n\n<!-- <div class=\"inlinee\" style=\"position: relative;\"> -->\n  <div class=\"hover card img-fluid rounded-circle\" style=\"z-index: 1;\" [ngStyle]=\"!disabled?{'height' : '140px', 'width' : '140px'} : {'height' : '50px', 'width' : '50px'}\">\n    <img class=\"card-img-top rounded-circle\" src=\"assets/img/guest.png\" alt=\"account image\" [ngStyle]=\"!disabled?{'height' : '139px', 'width' : '139px'} : {'height' : '49px', 'width' : '49px'}\">\n    <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"top-right fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\n    <div class=\"card-img-overlay\">\n      <div class=\"card-body\" (click)=\"onMakeLittleCard()\">\n        <div class=\"card-text\" *ngIf=\"!disabled\">\n          <!-- <button type=\"button\" style=\"margin-top: 20px; left: 2px;\"><i class=\"fa fa-arrow-circle-o-left\" aria-hidden=\"true\"></i></button> -->\n          <br>\n          <br>\n          <button type=\"button\" class=\"btn btn-danger btn-circle\" tooltip=\"Remove Him\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onRemoveFromList(person)\"><i class=\"fa fa-times\"></i></button>\n          <button type=\"button\" class=\"btn btn-success btn-circle\" tooltip=\"Make Him Admin\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onAdminPerson(indexPerson)\" style=\"margin-left: 15px;\"><i class=\"fa fa-user\"></i></button>\n        </div>\n      </div>\n    </div>\n  </div>\n  <!-- <button type=\"button\" style=\"z-index: 2;\"><i class=\"fa fa-arrow-circle-o-left\" aria-hidden=\"true\"></i></button> -->\n  <!-- <h3 *ngIf=\"!disabled\" class=\"card-title\" style=\"display: inline-block; position: absolute; bottom: 0;\">\n      {{ nameToAdd }} <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\n  </h3> -->\n<!-- </div> -->"
+module.exports = "<!-- <div class=\"hover card rounded-circle inlinee\" style=\"background-image: https://www.seekpng.com/png/full/72-729700_account-avatar-face-head-person-profile-user-comments.png;\" [ngStyle]=\"!disabled?{'height' : '140px', 'width' : '140px'} : {'height' : '50px', 'width' : '50px'}\">\r\n  <div class=\"card-body\"  (click)=\"onMakeLittleCard()\">\r\n    <p *ngIf=\"!disabled\" class=\"card-title\" style=\"display: inline-block;\">\r\n      {{ nameToAdd }} <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\r\n    </p>\r\n    <br>\r\n  </div>\r\n    <div style=\"margin-left: 25%;\" *ngIf=\"!disabled\">\r\n      <button type=\"button\" class=\"btn btn-danger btn-circle\" tooltip=\"Remove Him\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onRemoveFromList(person)\"><i class=\"fa fa-times\"></i></button>\r\n      <button type=\"button\" class=\"btn btn-success btn-circle\" tooltip=\"Make Him Admin\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onAdminPerson(indexPerson)\" style=\"margin-left: 15px;\"><i class=\"fa fa-user\"></i></button>\r\n    </div>\r\n</div> -->\r\n\r\n<!-- <div class=\"inlinee\" style=\"position: relative;\"> -->\r\n  <div class=\"hover card img-fluid rounded-circle\" style=\"z-index: 1;\" [ngStyle]=\"!disabled?{'height' : '140px', 'width' : '140px'} : {'height' : '50px', 'width' : '50px'}\">\r\n    <img class=\"card-img-top rounded-circle\" src=\"assets/img/guest.png\" alt=\"account image\" [ngStyle]=\"!disabled?{'height' : '139px', 'width' : '139px'} : {'height' : '49px', 'width' : '49px'}\">\r\n    <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"top-right fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\r\n    <div class=\"card-img-overlay\">\r\n      <div class=\"card-body\" (click)=\"onMakeLittleCard()\">\r\n        <div class=\"card-text\" *ngIf=\"!disabled\">\r\n          <!-- <button type=\"button\" style=\"margin-top: 20px; left: 2px;\"><i class=\"fa fa-arrow-circle-o-left\" aria-hidden=\"true\"></i></button> -->\r\n          <br>\r\n          <br>\r\n          <button type=\"button\" class=\"btn btn-danger btn-circle\" tooltip=\"Remove Him\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onRemoveFromList(person)\"><i class=\"fa fa-times\"></i></button>\r\n          <button type=\"button\" class=\"btn btn-success btn-circle\" tooltip=\"Make Him Admin\" [adaptivePosition]=\"false\" placement=\"top\" (click)=\"onAdminPerson(indexPerson)\" style=\"margin-left: 15px;\"><i class=\"fa fa-user\"></i></button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <!-- <button type=\"button\" style=\"z-index: 2;\"><i class=\"fa fa-arrow-circle-o-left\" aria-hidden=\"true\"></i></button> -->\r\n  <!-- <h3 *ngIf=\"!disabled\" class=\"card-title\" style=\"display: inline-block; position: absolute; bottom: 0;\">\r\n      {{ nameToAdd }} <sup *ngIf=\"personGroupService.checkAdminPersonToAdd(indexPerson)\" class=\"fa fa-user-secret\" style=\"color: #33cc33;\" tooltip=\"Admin\" [adaptivePosition]=\"false\" placement=\"top\"></sup>\r\n  </h3> -->\r\n<!-- </div> -->"
 
 /***/ }),
 
@@ -1975,7 +2119,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<a class=\"hover list-group-item clearfix\">\n  <div class=\"pull-left\">\n      <p class=\"list-group-item-text\">{{ name }}</p>\n  </div>\n</a>"
+module.exports = "<a class=\"hover list-group-item clearfix\">\r\n  <div class=\"pull-left\">\r\n      <p class=\"list-group-item-text\">{{ name }}</p>\r\n  </div>\r\n</a>"
 
 /***/ }),
 
@@ -2068,7 +2212,7 @@ module.exports = ".circle {\r\n  position: relative;\r\n  width: 30px;\r\n  heig
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<cdk-virtual-scroll-viewport style=\"height: 600px;\" itemSize=\"250\" class=\"viewport\">\n<ul id=\"hexGrid\">\n        <ng-container *ngFor=\"let group of groups | filter :['name'] : nameGroupp : 'includes'\" >\n            <!-- <li *ngIf=\"checking(group.name)\" class=\"hex\"> -->\n            <li class=\"hex\" (click)=\"onChooseGroup(group._id)\">\n                <a class=\"hexIn\">\n                    <img src=\"{{ group.imgPath }}\" alt=\"\"/>\n                    <div class=\"circle\">{{ group.people.length }}</div>\n                    <h1>{{ group.name }}</h1>\n                    <p>{{ group.people.length }} of members</p>\n                </a>\n            </li>\n        </ng-container>\n        \n        <li *ngIf=\"mygroups\" class=\"hex\" (click)=\"onNew()\">\n            <a class=\"hexIn\">\n                <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\n                <h1>Create a new Group</h1>\n                <p>Create a new Group</p>\n            </a>\n        </li>\n    </ul>\n</cdk-virtual-scroll-viewport>\n\n<!-- <ul id=\"hexGrid\">\n    <ng-container *ngFor=\"let group of groups\" >\n            <app-group-item class=\"hexmy\" [group]=\"group\" [id]=\"group._id\"></app-group-item>\n    </ng-container>\n    \n</ul> -->\n\n\n\n"
+module.exports = "<cdk-virtual-scroll-viewport style=\"height: 600px;\" itemSize=\"250\" class=\"viewport\">\r\n<ul id=\"hexGrid\">\r\n        <ng-container *ngFor=\"let group of groups | filter :['name'] : nameGroupp : 'includes'\" >\r\n            <!-- <li *ngIf=\"checking(group.name)\" class=\"hex\"> -->\r\n            <li class=\"hex\" (click)=\"onChooseGroup(group._id)\">\r\n                <a class=\"hexIn\">\r\n                    <img src=\"{{ group.imgPath }}\" alt=\"\"/>\r\n                    <div class=\"circle\">{{ group.people.length }}</div>\r\n                    <h1>{{ group.name }}</h1>\r\n                    <p>{{ group.people.length }} of members</p>\r\n                </a>\r\n            </li>\r\n        </ng-container>\r\n        \r\n        <li *ngIf=\"mygroups\" class=\"hex\" (click)=\"onNew()\">\r\n            <a class=\"hexIn\">\r\n                <img src=\"assets/img/Plus_Sign.png\" alt=\"\"/>\r\n                <h1>Create a new Group</h1>\r\n                <p>Create a new Group</p>\r\n            </a>\r\n        </li>\r\n    </ul>\r\n</cdk-virtual-scroll-viewport>\r\n\r\n<!-- <ul id=\"hexGrid\">\r\n    <ng-container *ngFor=\"let group of groups\" >\r\n            <app-group-item class=\"hexmy\" [group]=\"group\" [id]=\"group._id\"></app-group-item>\r\n    </ng-container>\r\n    \r\n</ul> -->\r\n\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -2171,7 +2315,7 @@ module.exports = ".vl {\r\nborder-left: 6px solid green;\r\nheight: 500px;\r\n}\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<br>\n<div class=\"container\">\n  <!-- <div class=\"jumbotron\"> -->\n  <div class=\"input-group\">\n    <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Search\">\n  </div>\n  <!-- </div> -->\n</div>\n<hr style=\"border: none;\nbackground-color: black;\nheight: 2px;\">\n<br>\n<div class=\"row\">\n  <div class=\"col-lg-5\">\n    <h1 style=\"text-align: center\">Groups Includes Me</h1>\n    <app-groups-list [mygroups]=\"false\" [groups]=\"groups\" [nameGroupp]=\"nameGroup\"></app-groups-list>\n  </div>\n\n  <div class=\"col-lg-2 line-list\">\n    <hr id=\"line1\" class=\"line\">\n    <br>\n    <hr id=\"line2\" class=\"line\">\n    <br>\n    <hr id=\"line3\" class=\"line\">\n  </div>\n  \n  <div class=\"col-lg-5\">\n    <!-- <app-hive></app-hive> -->\n    <h1 style=\"text-align: center\">My Groups</h1>\n    <app-groups-list [mygroups]=\"true\" [groups]=\"groupsAdmin\" [nameGroupp]=\"nameGroup\"></app-groups-list>\n  </div>\n</div>\n"
+module.exports = "<br>\r\n<div class=\"container\">\r\n  <!-- <div class=\"jumbotron\"> -->\r\n  <div class=\"input-group\">\r\n    <input type=\"text\" class=\"form-control\" name=\"nameGroup\" [(ngModel)]=\"nameGroup\" placeholder=\"Search\">\r\n  </div>\r\n  <!-- </div> -->\r\n</div>\r\n<hr style=\"border: none;\r\nbackground-color: black;\r\nheight: 2px;\">\r\n<br>\r\n<div class=\"row\">\r\n  <div class=\"col-lg-5\">\r\n    <h1 style=\"text-align: center\">Groups Includes Me</h1>\r\n    <app-groups-list [mygroups]=\"false\" [groups]=\"groups\" [nameGroupp]=\"nameGroup\"></app-groups-list>\r\n  </div>\r\n\r\n  <div class=\"col-lg-2 line-list\">\r\n    <hr id=\"line1\" class=\"line\">\r\n    <br>\r\n    <hr id=\"line2\" class=\"line\">\r\n    <br>\r\n    <hr id=\"line3\" class=\"line\">\r\n  </div>\r\n  \r\n  <div class=\"col-lg-5\">\r\n    <!-- <app-hive></app-hive> -->\r\n    <h1 style=\"text-align: center\">My Groups</h1>\r\n    <app-groups-list [mygroups]=\"true\" [groups]=\"groupsAdmin\" [nameGroupp]=\"nameGroup\"></app-groups-list>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2207,12 +2351,16 @@ var GroupsComponent = /** @class */ (function () {
     }
     GroupsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonNotAdmin/' + this.authService.getAcc()._id).subscribe(function (res) {
-            _this.groups = res;
-            // console.log(this.groups);
-        });
-        this.http.get('http://' + this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonAdmin/' + this.authService.getAcc()._id).subscribe(function (res) {
-            _this.groupsAdmin = res;
+        this.http.get('http://' + this.getipService.getip() + ':4200/user').subscribe(function (res) {
+            _this.authService.login(res);
+            console.log(_this.authService.getUser());
+            _this.http.get('http://' + _this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonNotAdmin/' + _this.authService.getId()).subscribe(function (res) {
+                _this.groups = res;
+                // console.log(this.groups);
+            });
+            _this.http.get('http://' + _this.getipService.getip() + ':5000/api/allGroups/getGroupsByPersonAdmin/' + _this.authService.getId()).subscribe(function (res) {
+                _this.groupsAdmin = res;
+            });
         });
     };
     GroupsComponent.prototype.checking = function (str) {
@@ -2441,7 +2589,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\groups\new versions\groups-hive\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\Ron Nabet\Desktop\groups-hive\src\main.ts */"./src/main.ts");
 
 
 /***/ })
