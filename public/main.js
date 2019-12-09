@@ -305,7 +305,7 @@ var AuthService = /** @class */ (function () {
         var _this = this;
         console.log(user);
         /** Shraga */
-        this.user = new _groups_people_model__WEBPACK_IMPORTED_MODULE_0__["People"](user.id, user.displayName, '111111', [''], [{ adfsUID: 'first@fgh', uniqueID: 'first@fgh.idf' }], user.mail, "assets/img/guest.png");
+        this.user = new _groups_people_model__WEBPACK_IMPORTED_MODULE_0__["People"](user._id, user.displayName, '111111', [''], [{ adfsUID: 'first@fgh', uniqueID: 'first@fgh.idf' }], user.mail, "assets/img/guest.png");
         this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe(function (res) {
             if (res != { message: "User created!" }) {
                 _this.user = new _groups_people_model__WEBPACK_IMPORTED_MODULE_0__["People"](res._id, res.fullName, res.personalNumber, res.hierarchy, res.secondaryDomainUsers, res.mail, res.avatarPath);

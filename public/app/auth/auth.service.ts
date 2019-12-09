@@ -16,7 +16,7 @@ export class AuthService {
 
         console.log(user);
         /** Shraga */
-        this.user = new People(user.id, user.displayName, '111111', [''], [{ adfsUID: 'first@fgh', uniqueID: 'first@fgh.idf'}], user.mail, "assets/img/guest.png");
+        this.user = new People(user._id, user.displayName, '111111', [''], [{ adfsUID: 'first@fgh', uniqueID: 'first@fgh.idf'}], user.mail, "assets/img/guest.png");
         this.http.post('http://' + this.getipService.getip() + ':5000/api/checkUser', this.user).subscribe((res: any) => {
             if(res != { message: "User created!" }){
                 this.user = new People(res._id, res.fullName, res.personalNumber, res.hierarchy, res.secondaryDomainUsers, res.mail, res.avatarPath);
