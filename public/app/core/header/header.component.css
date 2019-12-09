@@ -1,0 +1,122 @@
+/* body {
+    background: url(../../../assets/img/background.jpg) no-repeat center center fixed;
+} */
+
+.backgrounds {
+    width: 150px;
+    height: 75px;
+    border-radius: 10%;
+}
+
+#userAvatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding-top: 3px;
+}
+
+#userAvatar:hover {
+    cursor: pointer;
+}
+
+#userName {
+    color: white;
+    padding-top: 10px;
+}
+
+#btnBackgrounds {
+    cursor: pointer;
+    color: white;
+    font-size: 1.3rem;
+}
+
+/* .backgrounds:hover {
+    color: slategray;
+} */
+
+.navbar {
+    background-color: black;
+    color: black;
+    /* position: sticky; */
+}
+
+.navbar-header a {
+    color: black;
+}
+
+.nav-item a {
+    color: white;
+}
+
+h2 {
+    color: white;
+}
+
+h2:hover {
+  color: slategrey;
+}
+
+#home:hover {
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    background-color: black
+}
+
+ul li {
+	float: left;
+	padding: 3px;
+
+}
+
+
+ul li a {
+	display: block;
+	padding: 20px;
+	color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+ul li a:hover {
+	background: #444;
+	 transition-property: background-color;
+   transition-duration: 0.4s;
+   transition-timing-function: ease;
+   color: #FFF;
+
+
+
+}
+
+ul li:hover {
+    background: #a3c2c2;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.dropdown-menu {
+    background-color: black;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+.form-control-underlined {
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+.p-1{
+  padding: .35rem!important;
+}
+
+.form-inline {
+  margin-right: 20px;
+}
+

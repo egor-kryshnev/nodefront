@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+/* html {
+    background: url(./assets/img/wallpaper.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+} */
+
+/* html {
+    overflow: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+} */
+
+body {
+    background: url(assets/img/backgrounds/background5.jpg) no-repeat center center fixed;
+}
+
+html,body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+

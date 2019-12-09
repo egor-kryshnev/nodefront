@@ -1,0 +1,69 @@
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+  height: 65px;
+  /* background-color: #000000; */
+}
+
+h3 {
+  color: white;
+  margin-left: 55px;
+}
+
+.yesodot{
+  position: absolute;
+  left: 92.3%;
+  top: -85%;
+  opacity: 0.3;
+  -webkit-transition: 1s;
+}
+
+.yesodot:hover {
+  cursor: pointer;
+  opacity: 0.85;
+  /* -webkit-transition: 1s; */
+}
+
+h3:hover{
+  opacity: 0.5;
+}
+
+footer ul.footerleft {
+  margin-left: 150px;
+  margin-top: 10px;
+}
+
+footer ul.footerleft li {
+  display: inline;
+  margin-right: 25px;
+}
+
+footer a {
+  color: #222;
+}
+
+.YESODOT_5{
+  position: absolute;
+  top: 12%;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#logoImg {
+  position: absolute;
+  height: 45px;
+  width: auto;
+}
+
+/* #logoImg:hover {
+  cursor: pointer;
+} */
+
+.row:hover {
+  cursor: pointer;
+}
